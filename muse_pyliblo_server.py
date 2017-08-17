@@ -98,38 +98,38 @@ class MuseServer(ServerThread):
 
 	#receive elements data
     	@make_method('/muse/elements/alpha_session_score', 'ffff')
-   	def theta_absolute_callback(self, path, args):
+   	def alpha_session_callback(self, path, args):
 		f = self.f
 		l_ear, l_forehead, r_forehead, r_ear = args
-		f.write("ds " + str(l_ear) + ' ' + str(l_forehead) + ' ' + str(r_forehead) + ' ' + str(r_ear) + '\n')
+		f.write("as " + str(l_ear) + ' ' + str(l_forehead) + ' ' + str(r_forehead) + ' ' + str(r_ear) + '\n')
 
 	#receive elements data
     	@make_method('/muse/elements/beta_session_score', 'ffff')
-   	def theta_absolute_callback(self, path, args):
+   	def beta_session_callback(self, path, args):
 		f = self.f
 		l_ear, l_forehead, r_forehead, r_ear = args
-		f.write("ds " + str(l_ear) + ' ' + str(l_forehead) + ' ' + str(r_forehead) + ' ' + str(r_ear) + '\n')
+		f.write("bs " + str(l_ear) + ' ' + str(l_forehead) + ' ' + str(r_forehead) + ' ' + str(r_ear) + '\n')
 		
 	#receive elements data
     	@make_method('/muse/elements/gamma_session_score', 'ffff')
-   	def theta_absolute_callback(self, path, args):
+   	def gamma_session_callback(self, path, args):
 		f = self.f
 		l_ear, l_forehead, r_forehead, r_ear = args
-		f.write("ds " + str(l_ear) + ' ' + str(l_forehead) + ' ' + str(r_forehead) + ' ' + str(r_ear) + '\n')
+		f.write("gs " + str(l_ear) + ' ' + str(l_forehead) + ' ' + str(r_forehead) + ' ' + str(r_ear) + '\n')
 	
 	#receive elements data
     	@make_method('/muse/elements/delta_session_score', 'ffff')
-   	def theta_absolute_callback(self, path, args):
+   	def delta_session_callback(self, path, args):
 		f = self.f
 		l_ear, l_forehead, r_forehead, r_ear = args
 		f.write("ds " + str(l_ear) + ' ' + str(l_forehead) + ' ' + str(r_forehead) + ' ' + str(r_ear) + '\n')
 		
 	#receive elements data
     	@make_method('/muse/elements/theta_session_score', 'ffff')
-   	def theta_absolute_callback(self, path, args):
+   	def theta_session_callback(self, path, args):
 		f = self.f
 		l_ear, l_forehead, r_forehead, r_ear = args
-		f.write("ds " + str(l_ear) + ' ' + str(l_forehead) + ' ' + str(r_forehead) + ' ' + str(r_ear) + '\n')	
+		f.write("ts " + str(l_ear) + ' ' + str(l_forehead) + ' ' + str(r_forehead) + ' ' + str(r_ear) + '\n')	
 		
 	#receive elements data
     	@make_method('/muse/elements/experimental/concentration', 'f')
