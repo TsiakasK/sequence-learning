@@ -102,7 +102,7 @@ ps = 0
 
 total_score = 0 
 previous_score = 0 
-#out = open(dirname + "/output", 'w')
+out = open(dirname + "/output", 'w')
 log = open(dirname + "/state_EEG", 'a')
 log2 = open(dirname + "/logfile", 'a')
 server = mps.initialize(out)
