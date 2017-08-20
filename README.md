@@ -1,4 +1,3 @@
-# sequence-learning
 # Interactive Learning and Adaptation for the Sequence Learning task with NAO
 - Supervised Actor Critic with Policy Gradient Reinforcement Learning
 - Dynamic User Modeling 
