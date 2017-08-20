@@ -22,7 +22,7 @@ muse-io --device Muse-XXXX --osc osc.udp://localhost:5000
 *Note: for the purposes of the game, we have built a buzzer-like box with EASY(R) buttons for the user to respond, responses can be also recorder through keyboard* 
 
 ## output files
-- MUSE output files
+- MUSE output files  
 During the interaction, we collect MUSE data (1) when the robot announces the sequence and (2) when the user reponds
 
 - Each line on the file starts with a character, each with a specific meaning (check http://developer.choosemuse.com/research-tools/available-data for reference):  
@@ -46,20 +46,20 @@ ts – theta session score
 c – concentration  
 Each line has four readings from sensors in left ear, left forehead, right forehead, right ear.  
 
-- Robot_#
+- Robot_#  
 This file records data from Muse when user is listening to the robot while it is announcing the sequence
 
-- User_#
+- User_#  
 This file records data from Muse when user is responding by pressing the buttons
 
-- logfile:
+- logfile  
 For each round the following details are recorded:   
 Turn number, length of sequence, robot feedback, current score, success (1) / failure (-1), reaction time, completion time, sequence given by robot, sequence entered by user.  
 Reaction time: Time until user enters the first character in the sequence.  
 Completion time: Time until user completes the entire sequence.  
 
-- state_EEG:
+- state_EEG  
 In each round, the below details are recorded:  
-Length of the sequence, robot feedback type, previous score (users score from the previous turn/round), corresponding EEG filenames  
-Score is calculated by the formula:  result*difficulty_level, where result = [-1, 1] and difficulty_level = [1,2,3,4]
+Sequence length (3,5,7,9), robot feedback (0: none, 1: positive, 2: negativ), previous score [-4, 4], corresponding EEG filenames  
+*Score is calculated by the formula:  result*difficulty_level, where result = [-1, 1] and difficulty_level = [1,2,3,4]*
 
