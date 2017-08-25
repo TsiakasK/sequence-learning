@@ -1,56 +1,34 @@
 #!/usr/bin/python
+import numpy as np
+import random
+import argparse
+from keras.models import model_from_json, Model
 from keras.models import Sequential
-from keras.layers.core import Dense, Dropout, Activation
-from keras.layers.advanced_activations import PReLU
-from keras.optimizers import RMSprop
-import numpy as np 
+from keras.layers.core import Dense, Dropout, Activation, Flatten
+from keras.optimizers import Adam
+import tensorflow as tf
+import json
+from keras import backend as K
 
+from actor import ActorNetwork
+from critic import CriticNetwork
 
-class PolicyGradient(): 
-	def __init__(self, state_input, actions, hidden, lr = 1e-03):  
-		self.model = Sequential()
-		self.state_input = state_input
-		self.actions = actions
-		self.hidden = hidden
-		self.lr = lr 
-		
-		self.pmodel = PolicyModel(self.state_input,self.actions,self.hidden)
-		self.vmodel = ValueModel(self.state_input,self.actions,self.hidden)
+sess = tf.Session()
+K.set_session(sess)
 
+state_dim = 3
+action_dim = 6
+BATCH_SIZE = 3
+TAU = 0.001     
+LRA = 0.0001    
+LRC = 0.001 
 
-class PolicyModel():
-	def __init__(self, state_input, actions, hidden, lr = 1e-03):  
-		self.model = Sequential()
-		self.state_input = state_input
-		self.actions = actions
-		self.hidden = hidden
-		self.lr = lr 
+actor = ActorNetwork(sess, state_dim, action_dim, BATCH_SIZE, TAU, LRA)
+#critic = CriticNetwork(sess, state_dim, action_dim, BATCH_SIZE, TAU, LRC)
+print actor
 
-		self.model.add(Dense(5, input_dim = self.state_input, activation='linear'))
-
-		for x in range(self.hidden):
-			self.model.add(Dense(5, activation='linear'))
 	
-		self.model.add(Dense(self.actions, activation='tanh'))
-		self.model.compile(loss='mse', optimizer='sgd')
-
-class ValueModel(): 
-	def __init__(self, state_input, actions, hidden, lr = 1e-03):  
-		self.model = Sequential()
-		self.state_input = state_input
-		self.actions = actions
-		self.hidden = hidden
-
-		self.model.add(Dense(5, input_dim = self.state_input + self.actions, activation='linear'))
-
-		for x in range(self.hidden-1):
-			self.model.add(Dense(5, activation='linear'))
-	
-		self.model.add(Dense(1, activation='tanh'))
-		self.model.compile(loss='mse', optimizer='sgd')
 
 
-pg = PolicyGradient(3,6,1)
-print pg.vmodel.model.get_weights()
-print pg.pmodel.model.get_weights()
+
 
