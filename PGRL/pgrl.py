@@ -24,8 +24,19 @@ LRA = 0.0001
 LRC = 0.001 
 
 actor = ActorNetwork(sess, state_dim, action_dim, BATCH_SIZE, TAU, LRA)
-#critic = CriticNetwork(sess, state_dim, action_dim, BATCH_SIZE, TAU, LRC)
-print actor
+
+critic = CriticNetwork(sess, state_dim, action_dim, BATCH_SIZE, TAU, LRC)
+
+# load save files
+#critic.model.save_weights("criticmodel.h5", overwrite=True)
+#critic.model.load_weights("criticmodel.h5") #
+
+# get action from state
+state = [0,3,0]
+#scores =  actor.model.predict(np.asarray(state).reshape(1, 3))[0]
+#action = np.where(np.random.multinomial(1,scores))[0][0]
+
+# train
 
 	
 
