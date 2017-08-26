@@ -13,5 +13,5 @@ sudo pip install keras
 or upgrade  
 sudo pip install git+git://github.com/fchollet/keras.git --upgrade
 
-- Install hpy5 for loading/saving models  
+- Install h5py for loading/saving models  
 sudo pip install h5py
