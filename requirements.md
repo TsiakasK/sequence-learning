@@ -12,3 +12,6 @@ sudo pip install --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/t
 sudo pip install keras  
 or upgrade  
 sudo pip install git+git://github.com/fchollet/keras.git --upgrade
+
+- Install hpy5 for loading/saving models  
+sudo pip install h5py
