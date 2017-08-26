@@ -14,4 +14,5 @@ or upgrade
 sudo pip install git+git://github.com/fchollet/keras.git --upgrade
 
 - Install h5py for loading/saving models  
+sudo apt-get install libhdf5-dev  
 sudo pip install h5py
