@@ -38,7 +38,6 @@ server = mps.initialize(intro)
 server.start()
 
 # Robot Introduction 
-"""
 tts.say("Hi! My name is Stewie!")
 tts.say("Let's play a game!")
 time.sleep(0.5)
@@ -69,17 +68,16 @@ while(sig2):
 
 time.sleep(0.7)
 tts.say("Great! Let's start!")
-"""
+
 intro.close()
 server.stop()
 server.free()
 
-positive_success = ["That was great! Keep up the good work!", "Wow, you do great! Go on!", "Awesome! Keep going!"]
-positive_failure = ["Oh, that was wrong! Don't give up!", "Oh, you missed it! No problem! Go on!", "Oops, that was not correct! That's OK! Keep going!"]
-negative_success = ["Ok, that was easy enough! Let's see now!", "Well, ok! Maybe you were lucky!", "OK, you got it! Was it random??"]
-negative_failure = ["Hmmm! I don't think you are paying any attention! Try harder!", "Hey! Are you there? Stay focused!", "Oh, wrong? You need to concentrate more!"]
+positive_success = ["That was great! Keep up the good work!", "Wow, you do really great! Go on!", "That's awesome! You got it! Keep going!", "Fantastic! You are doing great! Keep going!"]
+positive_failure = ["Oh, that was wrong! But that's fine! Don't give up!", "Oh, you missed it! No problem! Go on!", "Oops, that was not correct! That's OK! Keep going!", "Oops, too close! Stay focused and you will do it!"]
+negative_success = ["Ok, that was easy enough! Let's see now what you can do!", "Well, ok! Maybe you were lucky! Let's check the next one!", "OK, you got it! Was it random?? Let's try again.", "OK, I guess you made it! Maybe it was too easy!"]
+negative_failure = ["Hmmm! I don't think you are paying any attention! Try harder!", "Hey! Are you there? Stay focused when I speak!", "Oh! was that wrong? Maybe, you need to actually pay attention!"]
 			
-
 rf = 0
 server = []
 s = 0 
@@ -94,12 +92,25 @@ dirname = 'data/user_' + user + '/session_' +  str(session_id) + '/'
 turn = 1
 game = 1
 
-# 10 sequences of predefined actions for data collection -- maybe find a more formal way to define actions -- e.g., distribution etc.
-action_seqs = [[1,2,4,3,3,5,2,1,0,2,3,5,3,4,2,1,2,3,5,1,4,1,0,3,5], [0,0,2,4,2,3,5,3,2,4,1,1,4,2,3,5,2,1,4,2,1,3,5,4,1], [2,3,4,1,1,2,5,2,1,0,4,1,5,2,4,3,5,3,2,2,1,1,3,5,4], 				      [2,2,5,3,1,4,1,0,5,3,4,2,1,0,4,1,1,3,5,3,1,0,2,2,4], [2,4,3,2,4,2,1,5,0,4,0,1,5,2,2,1,4,2,3,5,4,2,3,5,3], [2,3,5,3,1,4,0,1,0,4,1,1,3,5,4,1,0,2,3,4,5,2,1,4,2], [0,1,2,4,3,2,5,3,1,4,1,0,3,5,2,3,5,1,2,3,4,2,1,3,4], [1,0,1,4,2,3,5,3,2,0,4,1,5,2,1,0,5,2,3,4,2,3,3,4,3], [1,2,5,2,4,3,2,5,1,0,4,1,2,5,3,2,5,1,2,4,2,3,4,1,1], [1,2,2,4,3,0,1,5,2,4,3,5,3,2,2,1,1,2,4,3,2,5,1,2,3], [0,1,2,3,4,3,5,1,2,3,4,3,2,0,1,2,3,4,3,2,2,3,3,4,2], [0,1,2,5,1,0,2,3,3,4,3,2,1,0,2,3,5,2,3,5,2,4,3,2,3]]
+# 12 sequences of predefined actions for data collection -- show distribution of difficulty levels
+action_seqs = [[1,2,4,3,2,1,0,2,3,5,3,4,1,1,0,5,2,3,2,1,4,0,4,3,2], 
+	       [0,1,2,4,2,3,5,1,4,0,0,2,4,3,5,2,1,4,0,1,3,5,4,1,0], 
+	       [2,3,4,1,1,0,5,2,1,0,4,1,5,2,3,4,3,2,2,1,5,2,0,4,1], 				      		
+	       [2,2,5,3,1,4,1,0,5,3,4,2,1,0,4,1,1,3,5,3,1,0,2,2,4], 
+	       [2,4,3,2,1,0,4,1,5,0,4,0,1,5,2,4,2,3,5,1,4,2,3,5,3], 
+	       [2,3,5,3,1,0,4,1,0,4,1,2,2,5,1,2,4,3,2,5,2,1,0,4,2], 
+	       [0,1,2,3,4,2,0,5,1,4,1,0,5,2,3,5,1,2,3,4,2,1,5,1,2], 
+	       [1,0,1,5,2,3,2,5,1,0,4,1,5,2,1,0,5,2,3,4,2,3,2,4,1], 
+	       [0,1,2,4,3,5,2,1,0,4,1,5,2,3,5,0,1,2,4,2,3,4,0,1,1], 
+	       [1,0,2,3,4,1,0,1,5,2,4,3,5,2,1,0,2,4,3,5,2,1,4,2,3], 
+	       [0,1,4,2,3,4,1,0,4,2,0,5,1,2,3,4,2,0,5,1,0,2,5,2,1], 
+	       [0,1,2,5,1,0,4,2,3,5,3,1,5,0,4,2,5,2,3,2,1,4,3,2,3]]
 
-actions = action_seqs[randint(0,10)]
+
+sessID = randint(0,11)
+actions = action_seqs[sessID]
+
 ps = 0 
-
 total_score = 0 
 previous_score = 0 
 out = open(dirname + "/output", 'w')
