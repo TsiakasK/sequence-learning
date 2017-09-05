@@ -1,5 +1,7 @@
 - Install required packages  
+sudo apt-get update  
 sudo apt-get install python-pip python-dev  
+sudo apt-get install python-dev libatlas-base-dev gcc gfortran g++  
 sudo pip install numpy scipy  
 sudo pip install scikit-learn
 
