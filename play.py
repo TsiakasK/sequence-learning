@@ -15,8 +15,8 @@ import random
 random.seed(time.time())
 
 # NAO parameters
-ROBOT_IP = "129.107.119.134" # ethernet
-ROBOT_IP = "169.254.228.115"
+ROBOT_IP = "129.107.119.186" # ethernet
+#ROBOT_IP = "169.254.228.115"
 
 tts = ALProxy("ALTextToSpeech", ROBOT_IP, 9559)
 memory = ALProxy("ALMemory", ROBOT_IP, 9559)
