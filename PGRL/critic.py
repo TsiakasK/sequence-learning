@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import numpy as np
 import math
-from keras.initializers import normal, identity
+#from keras.initializers import normal, identity
 from keras.models import model_from_json, load_model
 from keras.models import Sequential
 from keras.layers import Dense, Flatten, Input, merge, Lambda, Activation
@@ -9,6 +9,7 @@ from keras.models import Sequential, Model
 from keras.optimizers import Adam
 import keras.backend as K
 import tensorflow as tf
+from keras.layers import concatenate
 
 # estimates Q(s,a)
 class CriticNetwork(object):
@@ -42,7 +43,7 @@ class CriticNetwork(object):
     def create_critic_network(self, state_size, action_size):
         S = Input(shape=[state_size])  
 	A = Input(shape=[action_size]) 
-	S_A = merge([S,A],mode='concat')  
+	S_A = concatenate([S,A])  
         h0 = Dense(10, activation='linear')(S_A)
         Q = Dense(1,activation='linear')(h0)   
         model = Model(inputs=[S,A],outputs=Q)
