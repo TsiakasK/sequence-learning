@@ -2,8 +2,9 @@
 sudo apt-get update  
 sudo apt-get install python-pip python-dev  
 sudo apt-get install python-dev libatlas-base-dev gcc gfortran g++  
-sudo pip install numpy scipy  
-sudo pip install scikit-learn
+sudo apt-get install python-numpy python-scipy python-matplotlib ipython ipython-notebook python-pandas python-sympy python-nose
+#sudo pip install numpy scipy  
+#sudo pip install scikit-learn
 
 - Install Tensorflow  
 sudo pip install tensorflow      # Python 2.7; CPU support (no GPU support)  
