@@ -8,7 +8,9 @@ sudo apt-get install python-numpy python-scipy python-matplotlib ipython ipython
 - Install Tensorflow  
 sudo pip install tensorflow      # Python 2.7; CPU support (no GPU support)  
 or upgrade  
-sudo pip install --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-1.3.0-cp27-none-linux_x86_64.whl
+sudo pip install --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-1.3.0-cp27-none-linux_x86_64.whl  
+NOTE: since we use 32-bit system for MuseSDK, check the following link for Tensorflow ion 32-bit system: http://cudamusing.blogspot.com/2015/11/building-tensorflow-for-jetson-tk1.html  
+
 
 - Install Keras  
 sudo pip install keras  
