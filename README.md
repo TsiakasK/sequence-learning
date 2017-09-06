@@ -5,7 +5,7 @@
 - Online GUI Robot Learning (Learning from Guidance)
 
 ## Requirements
-- Ubuntu 14.04 or later
+- 32-bit Ubuntu 14.04 or later
 - MUSE SDK for python http://developer.choosemuse.com/   
 - python pyliblo wrapper http://das.nasophon.de/pyliblo/  
 - NAOqi for python http://doc.aldebaran.com/2-5/dev/python/install_guide.html   
