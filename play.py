@@ -197,7 +197,7 @@ while (turn<=len(actions)):
 		correct += 1
 	#################################################################################
 
-	dataline = str(length) + ' ' + str(rf) + ' ' + str(previous_score) + ' robot_' + str(turn) + ' human_' + str(turn) + '\n'	
+	dataline = str(length) + ' ' + str(rf) + ' ' + str(previous_score) + ' robot_' + str(turn) + ' user_' + str(turn) + '\n'	
 	log.write(dataline)
 	dataline = str(turn) + ' ' + str(length) + ' ' + str(rf) + ' ' + str(score) + ' ' + str(success) + ' ' + str(reaction_time) + ' ' + str(completion_time) + ' ' + str(seq) + ' ' + str(res) + '\n'
 	log2.write(dataline)
