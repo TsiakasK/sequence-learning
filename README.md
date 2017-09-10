@@ -6,6 +6,7 @@
 
 ## Requirements
 - 64-bit Ubuntu 14.04 or later
+- check [detalied requirements file](requirements.md)
 
 ## Running instructions
 - Run muse-io
