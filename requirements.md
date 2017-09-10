@@ -2,6 +2,7 @@
 sudo apt-get update  
 sudo apt-get install python-pip python-dev libatlas-base-dev gcc gfortran g++  
 sudo apt-get install python-numpy python-scipy python-matplotlib ipython ipython-notebook python-pandas python-sympy python-nose 
+sudo apt-get install python-matplotlib  
 sudo apt-get install pyliblo-utils  
 
 ## Install Naoqi for NAO  
