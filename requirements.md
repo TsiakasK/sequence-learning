@@ -3,9 +3,14 @@ sudo apt-get update
 sudo apt-get install python-pip python-dev libatlas-base-dev gcc gfortran g++  
 sudo apt-get install python-numpy python-scipy python-matplotlib ipython ipython-notebook python-pandas python-sympy python-nose  
 
+
+## Install Naoqi for NAO  
+http://doc.aldebaran.com/2-5/dev/python/install_guide.html  
+After doing export,do:  echo 'export PYTHONPATH={PYTHONPATH}:/home/username/pynaoqi/' >> ~./bashrc  
+
 ## Install MuseSDK
 MUSE SDK for python http://developer.choosemuse.com/  
-Note: since we use 64-bit system for TensorFlow, check the following link for MuseSDK on 64-bit system: http://forum.choosemuse.com/t/issues-running-muselab-and-muse-io/112/20
+Note: since we use 64-bit system for TensorFlow, check the following link for MuseSDK on 64-bit system: http://forum.choosemuse.com/t/issues-running-muselab-and-muse-io/112/20  
 
 ## Install Tensorflow  
 sudo pip install tensorflow      # Python 2.7; CPU support (no GPU support)  
