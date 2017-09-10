@@ -5,13 +5,7 @@
 - Online GUI Robot Learning (Learning from Guidance)
 
 ## Requirements
-- 32-bit Ubuntu 14.04 or later
-- MUSE SDK for python http://developer.choosemuse.com/   
-- python pyliblo wrapper http://das.nasophon.de/pyliblo/  
-- NAOqi for python http://doc.aldebaran.com/2-5/dev/python/install_guide.html   
-After doing export, we need to do echo 'export PYTHONPATH={PYTHONPATH}:/home/username/pynaoqi/' >> ~./bashrc  
-- numpy, scipy, matplotlib  
-- TODO: create install.sh file for installing requirements  
+- 64-bit Ubuntu 14.04 or later
 
 ## Running instructions
 - Run muse-io
