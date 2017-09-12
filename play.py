@@ -41,17 +41,19 @@ server.start()
 tts.say("Hi! My name is Stewie!")
 tts.say("Let's play a game!")
 time.sleep(0.5)
-tts.say("I will say a sequence of letters and you have to repeat it")
+tts.say("I will say a sequence of letters and you have to repeat it!")
 time.sleep(0.5)
 tts.say("After the sequence is completed, you will listen to a beep sound!")
-time.sleep(0.9)
+time.sleep(0.8)
 aup.playSine(1000, 100, 0, 1)
 time.sleep(1.5)
-tts.say("After the sound, you have to respond, by pressing the buttons in the correct order") 
+tts.say("After the sound, you have to respond. by pressing the buttons in the correct order") 
 time.sleep(0.5)
-tts.say("Please remember, that you need to give your response after the beep sound!")
+tts.say("Please remember! You need to give your response, after the beep sound!")
 time.sleep(0.5)
-tts.say("Use only one hand, and make sure, that each button is pressed properly! Let's try with an example!")
+tts.say("Use only one hand, and make sure, that each button is pressed properly!")
+time.sleep(0.5)
+tts.say("Let's try with an example!")
 time.sleep(0.5)
 
 seq = ["b", "b", "a", "c", "a"]
@@ -67,7 +69,8 @@ while(sig2):
 		sig2 = 0
 
 time.sleep(0.7)
-tts.say("Great! Let's start!")
+tts.say("Great! Are you ready to start the session?")
+raw_input("Continue??")
 
 intro.close()
 server.stop()
@@ -109,6 +112,7 @@ action_seqs = [[1,2,4,3,2,1,0,2,3,5,3,4,1,1,0,5,2,3,2,1,4,0,4,3,2],
 
 sessID = randint(0,11)
 actions = action_seqs[sessID]
+print "sessID = " + str(sessID)
 
 ps = 0 
 total_score = 0 
@@ -147,7 +151,7 @@ while (turn<=len(actions)):
 
 	length = len(seq)
 	
-	r = randint(0,2)
+	r = randint(0,3)
 	if rf == 1: 
 		if previous_success == 1: 
 			tts.say(positive_success[r])
@@ -214,4 +218,6 @@ log.close()
 log2.close()
 server.stop()
 
-tts.say("That's the end of our session! Thank you for your time!! Hope to see you again!!!")
+tts.say("That's the end of our session! Please take some time to complete a survey!")
+time.sleep(0.5)
+tts.say("Thank you for your time.!! Hope to see you again!!!")
