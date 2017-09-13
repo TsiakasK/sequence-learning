@@ -12,7 +12,7 @@ After doing export,do:  echo 'export PYTHONPATH={PYTHONPATH}:/home/username/pyna
 
 ## Install MuseSDK
 MUSE SDK for python http://developer.choosemuse.com/  
-Note: since we use 64-bit system for TensorFlow, check the following link for MuseSDK on 64-bit system: http://forum.choosemuse.com/t/issues-running-muselab-and-muse-io/112/20  
+Note: since we use 64-bit system for TensorFlow, check the following link for MuseSDK on 64-bit system: http://forum.choosemuse.com/t/issues-running-muselab-and-muse-io/112/20  or https://github.com/elnn/tomato/blob/master/README.md  
 
 ## Install Tensorflow  
 sudo pip install tensorflow      # Python 2.7; CPU support (no GPU support)  
