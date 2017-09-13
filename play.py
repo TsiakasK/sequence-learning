@@ -15,7 +15,7 @@ import random
 random.seed(time.time())
 
 # NAO parameters
-ROBOT_IP = "129.107.119.186" # ethernet
+ROBOT_IP = "129.107.118.139" # ethernet
 #ROBOT_IP = "169.254.228.115"
 
 tts = ALProxy("ALTextToSpeech", ROBOT_IP, 9559)
@@ -70,7 +70,8 @@ while(sig2):
 
 time.sleep(0.7)
 tts.say("Great! Are you ready to start the session?")
-raw_input("Continue??")
+#raw_input("Continue??")
+time.sleep(1)
 
 intro.close()
 server.stop()
@@ -79,7 +80,7 @@ server.free()
 positive_success = ["That was great! Keep up the good work!", "Wow, you do really great! Go on!", "That's awesome! You got it! Keep going!", "Fantastic! You are doing great! Keep going!"]
 positive_failure = ["Oh, that was wrong! But that's fine! Don't give up!", "Oh, you missed it! No problem! Go on!", "Oops, that was not correct! That's OK! Keep going!", "Oops, too close! Stay focused and you will do it!"]
 negative_success = ["Ok, that was easy enough! Let's see now what you can do!", "Well, ok! Maybe you were lucky! Let's check the next one!", "OK, you got it! Was it random?? Let's try again.", "OK, I guess you made it! Maybe it was too easy!"]
-negative_failure = ["Hmmm! I don't think you are paying any attention! Try harder!", "Hey! Are you there? Stay focused when I speak!", "Oh! was that wrong? Maybe, you need to actually pay attention!"]
+negative_failure = ["Hmmm! I don't think you are paying any attention! Try harder!", "Hey! Are you there? Stay focused when I speak!", "Oh! was that wrong? Maybe, you need to actually pay attention!", "If you want to succeed, you need to pay attention!"]
 			
 rf = 0
 server = []
@@ -221,3 +222,6 @@ server.stop()
 tts.say("That's the end of our session! Please take some time to complete a survey!")
 time.sleep(0.5)
 tts.say("Thank you for your time.!! Hope to see you again!!!")
+
+# https://form.jotform.us/72536243026148
+
