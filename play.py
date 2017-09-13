@@ -111,9 +111,10 @@ action_seqs = [[1,2,4,3,2,1,0,2,3,5,3,4,1,1,0,5,2,3,2,1,4,0,4,3,2],
 	       [0,1,2,5,1,0,4,2,3,5,3,1,5,0,4,2,5,2,3,2,1,4,3,2,3]]
 
 
-sessID = randint(0,11)
-actions = action_seqs[sessID]
-print "sessID = " + str(sessID)
+#sessID = randint(0,11)
+seqID = int(raw_input("Enter sequence ID: "))
+actions = action_seqs[seqID]
+print "seqID = " + str(seqID)
 
 ps = 0 
 total_score = 0 
