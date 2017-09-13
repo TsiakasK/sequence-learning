@@ -49,11 +49,18 @@ aup.playSine(1000, 100, 0, 1)
 time.sleep(1.5)
 tts.say("After the sound, you have to respond. by pressing the buttons in the correct order") 
 time.sleep(0.5)
+tts.say("Before each sequence, I will tell you the difficulty level of the the sequence.") 
+time.sleep(0.5)
+tts.say("Level one has three letters! Level two, has five! Level three has 7 letters and level four, has nine!") 
+time.sleep(0.5)
 tts.say("Please remember! You need to give your response, after the beep sound!")
 time.sleep(0.5)
 tts.say("Use only one hand, and make sure, that each button is pressed properly!")
 time.sleep(0.5)
 tts.say("Let's try with an example!")
+time.sleep(0.5)
+
+tts.say("Level 2")
 time.sleep(0.5)
 
 seq = ["b", "b", "a", "c", "a"]
@@ -166,6 +173,12 @@ while (turn<=len(actions)):
 		else: 
 			tts.say(negative_failure[r])
 
+	# announce difficulty level
+	diff_level = "Level" + str(Dold.index(length)+1)
+	tts.say(diff_level)
+	time.sleep(0.5)
+	
+	#announce sequence
 	for item in seq:
 		time.sleep(0.8)
 		tts.say(item)
