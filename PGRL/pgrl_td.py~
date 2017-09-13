@@ -163,7 +163,10 @@ policy_estimator = PolicyEstimator()
 value_estimator = ValueEstimator()
 
 with tf.Session() as sess:
-    sess.run(tf.initialize_all_variables())
+    sess.run(tf.global_variables_initializer)
     # Note, due to randomness in the policy the number of episodes you need to learn a good
     # policy may vary. ~300 seemed to work well for me.
     stats = actor_critic(env, policy_estimator, value_estimator, 300)
+
+
+

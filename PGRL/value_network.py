@@ -11,13 +11,13 @@ class ValueNetwork():
     estimates Q(s,a) 
     """
     
-    def __init__(self, learning_rate=0.1, scope="value_estimator"):
+    def __init__(self, state_dim, action_dim, learning_rate=0.1, scope="ValueNetwork"):
         with tf.variable_scope(scope):
-            self.state = tf.placeholder(tf.int32, [], "state")
+            self.state = tf.placeholder(tf.int32, (1,2), "state")
             self.target = tf.placeholder(dtype=tf.float32, name="target")
 
             # This is just table lookup estimator
-            state_one_hot = tf.one_hot(self.state, int(env.observation_space.n))
+            state_one_hot = tf.one_hot(self.state, state_dim)
             self.output_layer = tf.contrib.layers.fully_connected(
                 inputs=tf.expand_dims(state_one_hot, 0),
                 num_outputs=1,

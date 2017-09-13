@@ -12,17 +12,17 @@ class PolicyNetwork():
     estimates pi(a|s)
     """
     
-    def __init__(self, learning_rate=0.01, scope="policy_estimator"):
+    def __init__(self, state_dim, action_dim, learning_rate=0.01, scope="PolicyNetwork"):
         with tf.variable_scope(scope):
-            self.state = tf.placeholder(tf.int32, [], "state")
+            self.state = tf.placeholder(tf.int32, (1,2), "state")
             self.action = tf.placeholder(dtype=tf.int32, name="action")
             self.target = tf.placeholder(dtype=tf.float32, name="target")
 
             # This is just table lookup estimator
-            state_one_hot = tf.one_hot(self.state, int(env.observation_space.n))
+            state_one_hot = tf.one_hot(self.state, state_dim)
             self.output_layer = tf.contrib.layers.fully_connected(
                 inputs=tf.expand_dims(state_one_hot, 0),
-                num_outputs=env.action_space.n,
+                num_outputs=action_dim,
                 activation_fn=None,
                 weights_initializer=tf.zeros_initializer)
 
