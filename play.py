@@ -174,7 +174,7 @@ while (turn<=len(actions)):
 			tts.say(negative_failure[r])
 
 	# announce difficulty level
-	diff_level = "Level" + str(Dold.index(length)+1)
+	diff_level = "Level" + str(D.index(length)+1)
 	tts.say(diff_level)
 	time.sleep(0.5)
 	
