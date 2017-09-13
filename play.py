@@ -47,13 +47,13 @@ tts.say("After the sequence is completed, you will listen to a beep sound!")
 time.sleep(0.8)
 aup.playSine(1000, 100, 0, 1)
 time.sleep(1.5)
-tts.say("After the sound, you have to respond. by pressing the buttons in the correct order") 
+tts.say("After the sound, you have to respond, by pressing the buttons in the correct order") 
 time.sleep(0.5)
-tts.say("Before each sequence, I will tell you the difficulty level of the the sequence.") 
+tts.say("Before each sequence, I will tell you, the difficulty level of the sequence.") 
 time.sleep(0.5)
-tts.say("Level one has three letters! Level two, has five! Level three has 7 letters and level four, has nine!") 
+tts.say("Level one has three letters! Level two, has five!! Level three, has 7 letters and level four, has nine!") 
 time.sleep(0.5)
-tts.say("Please remember! You need to give your response, after the beep sound!")
+tts.say("Please remember!! You need to give your response, after the beep sound!")
 time.sleep(0.5)
 tts.say("Use only one hand, and make sure, that each button is pressed properly!")
 time.sleep(0.5)
@@ -84,10 +84,10 @@ intro.close()
 server.stop()
 server.free()
 
-positive_success = ["That was great! Keep up the good work!", "Wow, you do really great! Go on!", "That's awesome! You got it! Keep going!", "Fantastic! You are doing great! Keep going!"]
+positive_success = ["That was great! Keep up the good work!", "Wow, you do really great! Go on!", "That's awesome! You got it! Keep going!", "Fantastic! You do great! Keep going!"]
 positive_failure = ["Oh, that was wrong! But that's fine! Don't give up!", "Oh, you missed it! No problem! Go on!", "Oops, that was not correct! That's OK! Keep going!", "Oops, too close! Stay focused and you will do it!"]
 negative_success = ["Ok, that was easy enough! Let's see now what you can do!", "Well, ok! Maybe you were lucky! Let's check the next one!", "OK, you got it! Was it random?? Let's try again.", "OK, I guess you made it! Maybe it was too easy!"]
-negative_failure = ["Hmmm! I don't think you are paying any attention! Try harder!", "Hey! Are you there? Stay focused when I speak!", "Oh! was that wrong? Maybe, you need to actually pay attention!", "If you want to succeed, you need to pay attention!"]
+negative_failure = ["Hmmm! I don't think you are paying any attention! Try harder!", "Hey! Are you there? Stay focused when I speak!", "Oh! was that wrong? Well, you actually need to pay attention!", "If you want to succeed, you need to pay attention!"]
 			
 rf = 0
 server = []
