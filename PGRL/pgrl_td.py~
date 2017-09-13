@@ -167,6 +167,3 @@ with tf.Session() as sess:
     # Note, due to randomness in the policy the number of episodes you need to learn a good
     # policy may vary. ~300 seemed to work well for me.
     stats = actor_critic(env, policy_estimator, value_estimator, 300)
-
-
-
