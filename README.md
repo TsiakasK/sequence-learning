@@ -6,6 +6,7 @@
 
 ## Requirements
 - 64-bit Ubuntu 14.04 or later
+- Python 2.7
 - check [detailed requirements file](requirements.md)
 
 ## Running instructions
