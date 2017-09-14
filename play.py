@@ -15,7 +15,9 @@ import random
 random.seed(time.time())
 
 # NAO parameters
-ROBOT_IP = "129.107.118.139" # ethernet
+ROBOT_IP = "129.107.119.45" # ethernet
+#129.107.119.45
+#129.107.119.45
 #ROBOT_IP = "169.254.228.115"
 
 tts = ALProxy("ALTextToSpeech", ROBOT_IP, 9559)
@@ -174,6 +176,7 @@ while (turn<=len(actions)):
 			tts.say(negative_failure[r])
 
 	# announce difficulty level
+	time.sleep(0.3)
 	diff_level = "Level" + str(D.index(length)+1)
 	tts.say(diff_level)
 	time.sleep(0.5)
