@@ -53,8 +53,8 @@ Turn number, length of sequence, robot feedback, current score, success (1) / fa
 Reaction time: Time until user enters the first character in the sequence.  
 Completion time: Time until user completes the entire sequence.  
 
-- state_EEG  
+- state_EEG -- state formulation for the RL 
 In each round, the below details are recorded:  
 Sequence length (3,5,7,9), robot feedback (0: none, 1: positive, 2: negativ), previous score [-4, 4], corresponding EEG filenames  
-*Score is calculated by the formula:  result*difficulty_level, where result = [-1, 1] and difficulty_level = [1,2,3,4]
+*Score is calculated by the formula:  result x difficulty_level, where result = [-1, 1] and difficulty_level = [1,2,3,4]*    
 
