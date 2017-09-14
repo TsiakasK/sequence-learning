@@ -9,10 +9,10 @@ import collections
 
 if "../" not in sys.path:
   sys.path.append("../") 
-from lib.envs.cliff_walking import CliffWalkingEnv
-from lib import plotting
+#from lib.envs.cliff_walking import CliffWalkingEnv
+#from lib import plotting
 
-matplotlib.style.use('ggplot')
+#matplotlib.style.use('ggplot')
 
 class PolicyEstimator():
     """
@@ -146,8 +146,7 @@ def actor_critic(env, estimator_policy, estimator_value, num_episodes, discount_
             estimator_policy.update(state, td_error, action)
             
             # Print out which step we're on, useful for debugging.
-            print("\rStep {} @ Episode {}/{} ({})".format(
-                    t, i_episode + 1, num_episodes, stats.episode_rewards[i_episode - 1]), end="")
+            #print("\rStep {} @ Episode {}/{} ({})".format(t, i_episode + 1, num_episodes, stats.episode_rewards[i_episode - 1]), end="")
 
             if done:
                 break

@@ -13,7 +13,7 @@ class ValueNetwork():
     
     def __init__(self, state_dim, action_dim, learning_rate=0.1, scope="ValueNetwork"):
         with tf.variable_scope(scope):
-            self.state = tf.placeholder(tf.int32, (1,2), "state")
+            self.state = tf.placeholder(tf.int32, shape=(None,), name = "state")
             self.target = tf.placeholder(dtype=tf.float32, name="target")
 
             # This is just table lookup estimator
