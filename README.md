@@ -6,7 +6,7 @@
 
 ## Requirements
 - 64-bit Ubuntu 14.04 or later
-- check [detalied requirements file](requirements.md)
+- check [detailed requirements file](requirements.md)
 
 ## Running instructions
 - Run muse-io
@@ -33,7 +33,7 @@ Ab – Beta absolute
 Ag – Gamma absolute  
 Ad – Delta absolute  
 At – Theta absolute  
-as – Alpha session score [Session score info]  
+as – Alpha session score [Session score info](http://developer.choosemuse.com/research-tools/available-data#Band_Power_Session_Scores)    
 bs – Beta session score  
 gs – Gamma session score  
 ds – Delta session score  
