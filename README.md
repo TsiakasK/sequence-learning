@@ -1,8 +1,10 @@
 # Interactive Learning and Adaptation for the Sequence Learning task with NAO
-- Supervised Actor Critic with Policy Gradient Reinforcement Learning
+- Data Collection, Modeling and Analysis
+- Policy Gradient Actor Critic Reinforcement Learning 
 - Dynamic User Modeling 
 - EEG engagement monitoring using MUSE (Learning from Feedback)
 - Online GUI Robot Learning (Learning from Guidance)
+- Interactive Learning and Adaptation Framework - User Studies
 
 ## Requirements
 - 64-bit Ubuntu 14.04 or later
