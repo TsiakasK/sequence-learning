@@ -10,6 +10,8 @@ import muse_pyliblo_server as mps
 import matplotlib.pyplot as plt
 import gc
 import random 
+import webbrowser
+
 
 # initialize random seed
 random.seed(time.time())
@@ -38,7 +40,7 @@ os.makedirs(user_folder + "session_" + str(session_id))
 intro = open(user_folder + "session_" + str(session_id) + "/intro", 'w')
 server = mps.initialize(intro)
 server.start()
-"""
+
 # Robot Introduction 
 tts.say("Hi! My name is Stewie!")
 tts.say("Let's play a game!")
@@ -55,19 +57,17 @@ tts.say("Before each sequence, I will tell you, the difficulty level of the sequ
 time.sleep(0.5)
 tts.say("Level one has three letters! Level two, has five!! Level three, has 7 letters and level four, has nine!") 
 time.sleep(0.5)
-tts.say("Please remember!! You need to give your response, after the beep sound!")
+tts.say("Please remember!! You need to give your response. After the beep sound!")
 time.sleep(0.5)
 tts.say("Use only one hand, and make sure, that each button is pressed properly!")
 time.sleep(0.5)
 tts.say("Let's try with an example!")
 time.sleep(0.5)
 
-
+# example
+seq = ["b", "b", "a", "c", "a"]
 tts.say("Level 2")
 time.sleep(0.5)
-"""
-
-seq = ["b", "b", "a", "c", "a"]
 for item in seq:
 	time.sleep(0.5)
 	tts.say(item)
@@ -81,8 +81,8 @@ while(sig2):
 
 time.sleep(0.7)
 tts.say("Great! Are you ready to start the session?")
-#raw_input("Continue??")
 time.sleep(1)
+# end of example
 
 intro.close()
 server.stop()
@@ -90,7 +90,7 @@ server.free()
 
 positive_success = ["That was great! Keep up the good work!", "Wow, you do really great! Go on!", "That's awesome! You got it! Keep going!", "Fantastic! You do great! Keep going!"]
 positive_failure = ["Oh, that was wrong! But that's fine! Don't give up!", "Oh, you missed it! No problem! Go on!", "Oops, that was not correct! That's OK! Keep going!", "Oops, too close! Stay focused and you will do it!"]
-negative_success = ["Ok, that was easy enough! Let's see now what you can do!", "Well, ok! Maybe you were lucky! Let's check the next one!", "OK, you got it! Was it random?? Let's try again.", "OK, I guess you made it! Maybe it was too easy!"]
+negative_success = ["Ok, that was easy enough! Let's see again!", "Well, ok! Maybe you were lucky! Let's check the next one!", "OK, you got it! Was it random?? Let's try again.", "OK, I guess you made it! Maybe it was an easy one!"]
 negative_failure = ["Hmmm! I don't think you are paying any attention! Try harder!", "Hey! Are you there? Stay focused when I speak!", "Oh! was that wrong? Well, you actually need to pay attention!", "If you want to succeed, you need to pay attention!"]
 			
 rf = 0
@@ -178,11 +178,8 @@ while (turn<=len(actions)):
 			tts.say(negative_failure[r])
 
 	# announce difficulty level
-	time.sleep(0.3)
+	time.sleep(0.5)
 	diff_level = "Level" + str(D.index(length)+1)
-	
-	
-
 	tts.say(diff_level)
 	time.sleep(0.5)
 	
@@ -207,7 +204,6 @@ while (turn<=len(actions)):
 	sig2 = 1
 	first = 0 	
 	while(sig2):
-		#print readchar.readkey().lower()
 		res.append(readchar.readchar().lower())
 		if first == 0: 
 			reaction_time = time.time() - start_time
@@ -246,7 +242,7 @@ server.stop()
 
 tts.say("That's the end of our session! Please take some time to complete a survey!")
 time.sleep(0.5)
-tts.say("Thank you for your time.!! Hope to see you again!!!")
+tts.say("Thank you for your time!! Hope to see you again!!!")
 
-# https://form.jotform.us/72536243026148
-
+url = "https://form.jotform.us/72536243026148"
+webbrowser.open_new(url)
