@@ -38,7 +38,7 @@ os.makedirs(user_folder + "session_" + str(session_id))
 intro = open(user_folder + "session_" + str(session_id) + "/intro", 'w')
 server = mps.initialize(intro)
 server.start()
-
+"""
 # Robot Introduction 
 tts.say("Hi! My name is Stewie!")
 tts.say("Let's play a game!")
@@ -62,8 +62,10 @@ time.sleep(0.5)
 tts.say("Let's try with an example!")
 time.sleep(0.5)
 
+
 tts.say("Level 2")
 time.sleep(0.5)
+"""
 
 seq = ["b", "b", "a", "c", "a"]
 for item in seq:
@@ -178,6 +180,9 @@ while (turn<=len(actions)):
 	# announce difficulty level
 	time.sleep(0.3)
 	diff_level = "Level" + str(D.index(length)+1)
+	
+	
+
 	tts.say(diff_level)
 	time.sleep(0.5)
 	
@@ -202,7 +207,8 @@ while (turn<=len(actions)):
 	sig2 = 1
 	first = 0 	
 	while(sig2):
-		res.append(readchar.readkey().lower())
+		#print readchar.readkey().lower()
+		res.append(readchar.readchar().lower())
 		if first == 0: 
 			reaction_time = time.time() - start_time
 			first = 1
@@ -218,6 +224,8 @@ while (turn<=len(actions)):
 		score = D.index(length) + 1
 		correct += 1
 	#################################################################################
+
+	print "Turn No. " + str(turn) + " diff: " + str(diff_level) + " sequence: " +  str(seq) + " user's: " + str(res)
 
 	dataline = str(length) + ' ' + str(rf) + ' ' + str(previous_score) + ' robot_' + str(turn) + ' user_' + str(turn) + '\n'	
 	log.write(dataline)
