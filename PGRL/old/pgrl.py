@@ -25,7 +25,7 @@ K.set_session(sess)
 
 dims = [10,10]
 start = [1,1]
-goal = [3,3]
+goal = [4,3]
 action_list = [0,1,2,3]
 
 maze = env.simple_maze(dims, start, goal, action_list)
@@ -33,7 +33,7 @@ maze = env.simple_maze(dims, start, goal, action_list)
 state_dim = len(maze.state_dim)
 action_dim = 1
 action_size = len(maze.action_space)
-
+print "action size " + str(action_size)
 BATCH_SIZE = 3
 TAU = 0.001     
 LRA = 0.0001    
@@ -50,10 +50,10 @@ for episode in range(100):
 	R = 0
 	state = maze.start
 	maze.state = state
-	print episode, state 
+	#print episode, state 
 
-	for i in range(20):
-		# get critic output and sample action
+	for i in range(30):
+		# get actor output and sample action
 		state, _ , _ = state_action_processing(state)
 		scores = actor.model.predict(state)[0]
 		action =  np.where(np.random.multinomial(1,scores))[0][0]
@@ -61,9 +61,7 @@ for episode in range(100):
 		
 		# perform the action and observe state and reward
 		next_state, reward = maze.take_action(action)
-		#reward = maze.get_reward(action)
-		#print str(i) + " Taking action " +  str(act) + " from state " + str(state) + " to state: " + str(next_state) + " with reward " + str(reward) 	
-
+		
 		# discounted return update 
 		R += (gamma**i)*reward
 	
@@ -72,23 +70,32 @@ for episode in range(100):
 		next_action = np.where(np.random.multinomial(1,actor.model.predict(next_state)[0]))[0][0]
 		_, act2, state_action2 = state_action_processing(next_state, next_action)
 		v_next =  critic.model.predict(state_action2)[0]
-		#print " SARSA action " +  str(next_action)
+
+		#print v_next
 
 		if reward == 1:
-			q_t = reward
+			v_target = reward
 		else:
-			q_t = reward + gamma*v_next
+			v_target = reward + gamma*v_next
 
-		critic.model.fit(state_action, q_t, epochs=1, verbose=0) 
+		
+		if type(v_target) is not np.ndarray: 
+			v_target = np.asarray([v_target])
+		#print state_action, v_target
+
+		critic.model.fit(state_action, v_target, epochs=1, verbose=0) 
+		
 		grads = critic.gradients(state,act)
+		#print grads
+
 		actor.train(state, grads)
 
-		if reward == 10: 
+		if reward == 1: 
 			break
 		
 		state = next_state
 
-	print " "
+	print episode, i, R
 	returns.append(R)
 
 plt.plot(returns)
