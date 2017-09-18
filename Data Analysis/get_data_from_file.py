@@ -43,22 +43,27 @@ def ewma(Y, a = 0.2):
 			S.append(a*Y[i-1] + (1-a)*S[i-1])
 	return S	
 
-dirname = "data/"
+dirname = "../data/"
 users = os.listdir(dirname)
 print users
 
+#users = ["user_1"]
 
-ENG = {} 
+ 
 for user in users:
-	
 	sessions = os.listdir(dirname + '/' + user)
+	#sessions = ["session_3", "session_4"]
 	for session in sessions:
-		
+		ts = 0 
+		ENG = {}
+		EE = []
 		file_name = dirname + '/' + user + '/' + session
 		logfile = open(file_name + '/state_EEG', 'r')
 		lines = logfile.readlines()
 		logfile.close()
 		efile = open(file_name + '/engagement','w')
+		points = []
+		annotation = []
 		for line in lines: 
 			A = re.split('\s+', line)
 			eeg_filename = A[3]
@@ -72,37 +77,57 @@ for user in users:
 
 			e = [x+y for x, y in zip(a_smoothed, t_smoothed)]
 			engagement = [x/y for x, y in zip(b_smoothed, e)]
-			
+			points.append(len(engagement)-1)
 			efile.write(str(A[0]) + ' ' + str(A[1]) + ' ' + str(A[2]))
 			for E in engagement: 
 				efile.write(' ' + str(E))
+				EE.append(E)
 
+			annotation.append(A[0])
 			if ENG.has_key(A[0]):
 				ENG[A[0]].append(np.asarray(engagement).mean())	
 			else:
 				ENG[A[0]] = [np.asarray(engagement).mean()]
 
 			efile.write('\n')
-		#print ENG
+
+		print EE
+		plt.plot(EE)
+		plt.hold(True)
+		pr = 0 
+		print sum(points)
+		for pp, ann in zip(points, annotation):
+			print pp + pr 
+			plt.axvline(int(pp + pr), color = 'r')
+			plt.text(int(pr) + 1, 1, ann)
+			pr += pp 
+			#raw_input()
+		#plt.ylim([0,1.2])
+		if not os.path.exists(user + '/' + session):
+   			os.makedirs(user + '/' + session)	
+		plt.savefig(user + '/' + session + '/engagement.png')
+		plt.hold(False)
 		#raw_input()
 
-A = []
-W = []
-L = []
-for level in ENG: 
-	a = ENG[level]
-	weights = 100*np.ones_like(a)/len(a)
-	A.append(a)
-	W.append(weights)
-	L.append('Level = ' + str(level))
+		A = []
+		W = []
+		L = []
+		for level in ENG: 
+			a = ENG[level]
+			weights = 100*np.ones_like(a)/len(a)
+			#A.append(a)
+			#W.append(weights)
+			#L.append('Level = ' + str(level))
 
-	plt.hist(a, 2, weights = weights, label = 'Level = ' + str(level))
-#plt.xlim([0,1])
-	plt.legend()
-	plt.show('L.png')
-	plt.close()
-	print "END"
-		#raw_input()
+			plt.hist(a, weights = weights, label = 'Level = ' + str(level))
+			#plt.xlim([0,1])
+			plt.legend()
+			plt.title("M = " + str(np.asarray(a).mean()) + ' var = ' + str(np.asarray(a).var()))
+			#plt.show()
+			
+			plt.savefig(user + '/' + session + '/L_' + str(level) + '.png')
+			print "END"
+			#raw_input()
 
 				
 
