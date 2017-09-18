@@ -79,15 +79,18 @@ for user in users:
 			engagement = [x/y for x, y in zip(b_smoothed, e)]
 			points.append(len(engagement)-1)
 			efile.write(str(A[0]) + ' ' + str(A[1]) + ' ' + str(A[2]))
+	
 			for E in engagement: 
 				efile.write(' ' + str(E))
-				EE.append(E)
+
+			for cc in c_smoothed: 
+				EE.append(cc)
 
 			annotation.append(A[0])
 			if ENG.has_key(A[0]):
-				ENG[A[0]].append(np.asarray(engagement).mean())	
+				ENG[A[0]].append(np.asarray(c_smoothed).mean())	
 			else:
-				ENG[A[0]] = [np.asarray(engagement).mean()]
+				ENG[A[0]] = [np.asarray(c_smoothed).mean()]
 
 			efile.write('\n')
 
@@ -105,7 +108,7 @@ for user in users:
 		#plt.ylim([0,1.2])
 		if not os.path.exists(user + '/' + session):
    			os.makedirs(user + '/' + session)	
-		plt.savefig(user + '/' + session + '/engagement.png')
+		plt.savefig(user + '/' + session + '/concentration.png')
 		plt.hold(False)
 		#raw_input()
 
