@@ -81,7 +81,7 @@ while(sig2):
 
 time.sleep(0.7)
 tts.say("Great! Are you ready to start the session?")
-time.sleep(0.5)
+#time.sleep(0.5)
 # end of example
 
 intro.close()
