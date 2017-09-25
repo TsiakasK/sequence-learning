@@ -42,7 +42,7 @@ class ActorNetwork(object):
 
     def create_actor_network(self, state_size, action_size):
         S = Input(shape=[state_size])   
-        h0 = Dense(4, activation='tanh')(S)
+        h0 = Dense(5, activation='tanh')(S)
         V = Dense(action_size,activation='softmax')(h0)           
         model = Model(inputs=S,outputs=V)
         return model, model.trainable_weights, S

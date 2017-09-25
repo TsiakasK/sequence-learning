@@ -28,7 +28,6 @@ class CriticNetwork(object):
         self.sess.run(tf.global_variables_initializer())
 
     def gradients(self, state, action):
-	#print state, action
         return self.sess.run(self.action_grads, feed_dict={self.state: state, self.action: action})[0]
 
     def target_train(self):
@@ -43,7 +42,7 @@ class CriticNetwork(object):
 	A = Input(shape=[action_size]) 
 	S_A = concatenate([S,A])  
         h0 = Dense(5, activation='linear')(S_A)
-        Q = Dense(1,activation='linear')(h0)   
+        Q = Dense(1,activation='tanh')(h0)   
         model = Model(inputs=[S,A],outputs=Q)
         #model = Model(inputs=S,outputs=Q)
         adam = Adam(lr=self.LEARNING_RATE)
