@@ -14,19 +14,16 @@ import itertools
 
 seed = np.random.RandomState(seed=3)
 
-
 markers = ['o', 'v', 'h', 'H', 'o', 'v', 'h', 'H', 'h', 'H', 'o', 'v', 'h']
 colors = ['b', 'r','g','c','y','m', 'b', 'r','g','c','y','m','y','m', 'b']
 combs = list(itertools.product(markers, colors))
 
-
-
-dirname = '../data'
+dirname = 'clean_data'
 users = os.listdir(dirname)
-#D = np.zeros((len(pids), 24))
 P = {}
 D = []
 user_models = []
+name = []
 for user in users: 
 	sessions = os.listdir(dirname + '/' + user)
 	NoOfSessions = len(sessions)	
@@ -37,7 +34,6 @@ for user in users:
 		f.close()
 		P = {}
 		scores = []
-		print user + '/' + session
 		for line in lines:
 			a = re.split('\s+', line.strip())
 			level = abs(int(a[3])) - 1
@@ -52,7 +48,6 @@ for user in users:
 	
 		dd = -2*np.ones((4,3))
 		for p in P:
-			print P[p] 
 			l = P[p].count(-1)
 			w = P[p].count(1)
 			if w == 0:
@@ -69,51 +64,42 @@ for user in users:
 		D.append(np.asarray(dd).flatten())
 		
 		um = []
-		print scores
 		for i in [1,2,3,4]: 
 			if scores.count(i) == 0 and scores.count(-1*i) == 0: 
 				um.append(-1.0)
 			else: 
 				um.append(scores.count(i)/float((scores.count(i) + scores.count(-1*i))))
-		#print um
+		name.append([user + '/' + session])
 		user_models.append(um)
 
-#print user_models
-"""
-D -= np.asarray(D).mean()
-similarities = euclidean_distances(D)
-mds = manifold.MDS(n_components=2, max_iter=3000, eps=1e-9, random_state=seed,dissimilarity="precomputed", n_jobs=1)
-pos = mds.fit(similarities).embedding_
-plt.subplot(121)
-print pos
-for i, p in enumerate(pos): 
-	plt.plot(p[0], p[1], combs[i][0], markersize=9, color = combs[i][1], label = 'u'+str(i+1))
-plt.title('MDS wrt difficulty and feedback')
-#plt.legend()
-#plt.show()
-#plt.savefig('performance_RT_mds.jpg', bbox_inches='tight')		
-#plt.close()
-"""
 U = user_models
 user_models -= np.asarray(user_models).mean()
 similarities = euclidean_distances(user_models)
 mds = manifold.MDS(n_components=2, max_iter=3000, eps=1e-9, random_state=seed,dissimilarity="precomputed", n_jobs=1)
 pos = mds.fit(similarities).embedding_
-#plt.subplot(122)
+
 for i, p in enumerate(pos): 
-	plt.plot(p[0], p[1], combs[i][0], markersize=9, color = combs[i][1], label = 'u'+str(i+1))
+	plt.plot(p[0], p[1], combs[i][0], markersize=9, color = combs[i][1])
 plt.title('MDS wrt difficulty')
-#plt.legend()
-plt.show()
-#plt.savefig('performance_RT_mds.jpg', bbox_inches='tight')		
+plt.savefig("mds.png")
 plt.close()
 
 
-X = np.asarray(U)
-
-# CLUSTERING 
 clusters = 3
 
+# CLUSTERING on 2-D
+kmeans = KMeans(n_clusters=clusters, random_state=0).fit(pos)
+mm = ['r', 'b', 'g']
+for i, p in enumerate(pos): 
+	plt.plot(p[0], p[1], 'o', markersize=9, color = mm[kmeans.labels_[i]])
+	print name[i][0], kmeans.labels_[i]
+plt.title('MDS - Kmeans')
+plt.savefig('clustering.png')
+plt.close()
+
+
+# CLUSTERING on 4-D
+X = np.asarray(U)
 kmeans = KMeans(n_clusters=clusters, random_state=0).fit(X)
 print kmeans.labels_
 print kmeans.cluster_centers_	
@@ -129,7 +115,7 @@ if clusters == 3:
 if clusters == 4: 
 	index = [[0.5, 3, 5.5 , 8], [1, 3.5, 6, 8.5], [1.5, 4, 6.5, 9], [2, 4.5, 7, 9.5]]
 
-
+plt.hold(False)
 c = ['r', 'b', 'g', 'y']
 for k in range(clusters):
 	idx = index[k]
@@ -156,7 +142,7 @@ plt.ylabel('P(success|L)')
 plt.title('User Cluster Centroids (K = '+ str(clusters) +')')
 plt.legend()
 plt.tight_layout()
-plt.savefig('user_clusters.eps')
+plt.savefig('user_clusters.png')
 plt.close()
 
 #with open('k' + str(clusters) + '/user_models.csv', 'w') as f:

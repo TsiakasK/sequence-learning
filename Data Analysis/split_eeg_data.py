@@ -48,7 +48,7 @@ def ewma(Y, a = 0.2):
 			S.append(a*Y[i-1] + (1-a)*S[i-1])
 	return S	
 
-dirname = "../data/"
+dirname = "clean_data/"
 users = os.listdir(dirname)
 print users
 
@@ -83,11 +83,5 @@ for user in users:
 			f3 = open(file_name + '/EEG/bands_' + eeg_filename_2, 'w')
 			read_from_file(f1,f2, f3)
 			
-			
-			
-			
-		
 
-			
-		
-		
+

@@ -53,7 +53,7 @@ def ewma(Y, a = 0.2):
 
 
 D = [3,5,7,9]
-dirname = "../data/"
+dirname = "clean_data/"
 users = os.listdir(dirname)
  
 for user in users:
@@ -163,22 +163,24 @@ for user in users:
 		flatten = lambda l: [item for sublist in l for item in sublist]
 		Means = [0,0,0,0]
 		Vars = [0,0,0,0]
+		ff = open('EEG/engagement/' + user + '/' + session + '/mean_engagement_per_level', 'w')
 		for level in ENG: 
 			a = ENG[level]
 			normed_a = (a-minx)/(maxx-minx)
 			weights = 100*np.ones_like(normed_a)/len(normed_a)
 			plt.hist(a, weights = weights, label = 'Level = ' + str(level))
 			plt.legend()
-			plt.title("M = " + str(np.asarray(a).mean()) + ' var = ' + str(np.asarray(a).var()))
+			plt.title("M = " + str(np.asarray(normed_a).mean()) + ' var = ' + str(np.asarray(normed_a).var()))
 			plt.savefig('EEG/engagement/' + user + '/' + session + '/L_' + str(level) + '.png')
-			Means[D.index(int(level))] = np.asarray(a).mean()
-			Vars[D.index(int(level))] = np.asarray(a).var()
+			Means[D.index(int(level))] = np.asarray(normed_a).mean()
+			Vars[D.index(int(level))] = np.asarray(normed_a).var()
 
 		plt.plot(Means)
 		plt.savefig('EEG/engagement/' + user + '/' + session + '/means.png')
-		
+		for m in Means: 
+			ff.write(str(m) + '\n')
+		ff.close()
 			
 
-			
-		
-		
+
+
