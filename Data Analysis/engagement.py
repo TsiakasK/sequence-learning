@@ -33,15 +33,6 @@ def read_from_file(f):
 	
 	return np.asarray(a).mean(axis=1), np.asarray(b).mean(axis=1),np.asarray(g).mean(axis=1),np.asarray(d).mean(axis=1),np.asarray(t).mean(axis=1), c, h
 
-def check_status(V): 
-	#print len(V), len((V == np.asarray([1,1,1,1])) == True)
-	good = 0
-	for v in V:
-		if v == [1.0,1.0,1.0,1.0]:
-			good +=1
-	return good/float(len(V))
-
-
 def ewma(Y, a = 0.2): 
 	S = []
 	for i, y in enumerate(Y): 
@@ -69,7 +60,7 @@ for user in users:
 		logfile = open(file_name + '/state_EEG', 'r')
 		lines = logfile.readlines()
 		logfile.close()
-		efile = open(file_name + '/engagement','w')
+		efile = open(file_name + '/state_engagement','w')
 		T = []
 		
 		if not os.path.exists('EEG/engagement/' + user + '/' + session):
@@ -80,14 +71,7 @@ for user in users:
 			A = re.split('\s+', line)
 			eeg_filename = A[3]
 			f = open(file_name + '/' + eeg_filename, 'r')
-
 			a, b, g, d, t, c, h = read_from_file(f)
-
-			status = check_status(h)
-			#print status
-			#if status < 0.85:
-			#	print user, session, 
-
 			ff.write(str(status) + '\n')
 			
 			c_smoothed = ewma(c)
@@ -115,24 +99,14 @@ for user in users:
 
 		ff.close()
 		efile.close()
-	
-		#efile = open(file_name + '/engagement','w')
-		#lines = efile.readlines()
-		#efile.close()
 		
 		if not os.path.exists('EEG/engagement/' + user + '/' + session):
    			os.makedirs('EEG/engagement/'+ user + '/' + session)
 
-		#efile = open('EEG/engagement/' + user + '/' + session + '/normed_mean_engagement','w')
-		#for line in lines: 
-		#	A = re.split('\s+', line)
-		#	st1 = A[]
-
-
 		plt.plot(EE)
 		plt.hold(True)
-		pr = 0 
-	
+
+		pr = 0 	
 		for pp, ann in zip(points, annotation):
 			plt.axvline(int(pp + pr), color = 'r')
 			plt.text(int(pr) + 1, max(EE), ann)
@@ -141,7 +115,6 @@ for user in users:
 			
 		plt.savefig('EEG/engagement/' + user + '/' + session + '/engagement.png')
 		plt.hold(False)
-
 
 		# plot normalized
 		x = np.asarray(EE)
@@ -168,7 +141,7 @@ for user in users:
 			a = ENG[level]
 			normed_a = (a-minx)/(maxx-minx)
 			weights = 100*np.ones_like(normed_a)/len(normed_a)
-			plt.hist(a, weights = weights, label = 'Level = ' + str(level))
+			plt.hist(normed_a, weights = weights, label = 'Level = ' + str(level))
 			plt.legend()
 			plt.title("M = " + str(np.asarray(normed_a).mean()) + ' var = ' + str(np.asarray(normed_a).var()))
 			plt.savefig('EEG/engagement/' + user + '/' + session + '/L_' + str(level) + '.png')
@@ -180,7 +153,20 @@ for user in users:
 		for m in Means: 
 			ff.write(str(m) + '\n')
 		ff.close()
-			
 
+		efile = open(file_name + '/state_engagement','r')
+		lines = efile.readlines()
+		efile.close()
+		nfile = open(file_name + '/state_normed_engagement','w')
 
-
+		for line in lines: 
+			A = re.split('\s+', line)
+			length = A[0]
+			robot_feedback = A[1]
+			previous_score = A[2]
+			engagement = np.asfarray(A[3:-1],float)
+			normed_engagement = (engagement-minx)/(maxx-minx)
+			nfile.write(str(length) + ' ' + str(robot_feedback) + ' ' + str(previous_score))
+			for n in normed_engagement: 
+				nfile.write(' ' + str(n))
+			nfile.write('\n')
