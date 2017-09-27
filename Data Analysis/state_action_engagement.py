@@ -44,5 +44,5 @@ for user in users:
 			engagement = np.asfarray(B[3::],float).mean()
 			result = A[4]
 
-			filename.write(str(length) + ' ' + str(rfeedback) + ' ' + str(pscore) + ' ' + str(engagement) + ' ')		
+			filename.write(str(length) + ' ' + str(rfeedback) + ' ' + str(pscore) + ' ' + str(result) + ' ' + str(engagement) + ' ')		
 
