@@ -46,7 +46,7 @@ def ewma(Y, a = 0.2):
 D = [3,5,7,9]
 dirname = "clean_data/"
 users = os.listdir(dirname)
- 
+full_means = 'logfiles/mean_engagement_per_level'
 for user in users:
 	sessions = os.listdir(dirname + '/' + user)
 	for session in sessions:
@@ -63,9 +63,9 @@ for user in users:
 		efile = open(file_name + '/state_engagement','w')
 		T = []
 		
-		if not os.path.exists('EEG/engagement/' + user + '/' + session):
-   			os.makedirs('EEG/engagement/'+ user + '/' + session)
-		ff = open('EEG/engagement/' + user + '/' + session + '/status', 'w')
+		if not os.path.exists('Feedback Model/engagement/' + user + '/' + session):
+   			os.makedirs('Feedback Model/engagement/'+ user + '/' + session)
+		ff = open('Feedback Model/engagement/' + user + '/' + session + '/status', 'w')
 		print "opening: " + file_name
 		for line in lines: 
 			A = re.split('\s+', line)
@@ -100,8 +100,8 @@ for user in users:
 		ff.close()
 		efile.close()
 		
-		if not os.path.exists('EEG/engagement/' + user + '/' + session):
-   			os.makedirs('EEG/engagement/'+ user + '/' + session)
+		if not os.path.exists('Feedback Model/engagement/' + user + '/' + session):
+   			os.makedirs('Feedback Model/engagement/'+ user + '/' + session)
 
 		plt.plot(EE)
 		plt.hold(True)
@@ -113,7 +113,7 @@ for user in users:
 			pr += pp 
 
 			
-		plt.savefig('EEG/engagement/' + user + '/' + session + '/engagement.png')
+		plt.savefig('Feedback Model/engagement/' + user + '/' + session + '/engagement.png')
 		plt.hold(False)
 
 		# plot normalized
@@ -130,13 +130,13 @@ for user in users:
 			plt.axvline(int(pp + pr), color = 'r')
 			plt.text(int(pr) + 1, max(EE), ann)
 			pr += pp
-		plt.savefig('EEG/engagement/' + user + '/' + session + '/engagement_normed.png')
+		plt.savefig('Feedback Model/engagement/' + user + '/' + session + '/engagement_normed.png')
 		plt.hold(False)	
 
 		flatten = lambda l: [item for sublist in l for item in sublist]
 		Means = [0,0,0,0]
 		Vars = [0,0,0,0]
-		ff = open('EEG/engagement/' + user + '/' + session + '/mean_engagement_per_level', 'w')
+		ff = open('Feedback Model/engagement/' + user + '/' + session + '/mean_engagement_per_level', 'w')
 		for level in ENG: 
 			a = ENG[level]
 			normed_a = (a-minx)/(maxx-minx)
@@ -144,12 +144,12 @@ for user in users:
 			plt.hist(normed_a, weights = weights, label = 'Level = ' + str(level))
 			plt.legend()
 			plt.title("M = " + str(np.asarray(normed_a).mean()) + ' var = ' + str(np.asarray(normed_a).var()))
-			plt.savefig('EEG/engagement/' + user + '/' + session + '/L_' + str(level) + '.png')
+			plt.savefig('Feedback Model/engagement/' + user + '/' + session + '/L_' + str(level) + '.png')
 			Means[D.index(int(level))] = np.asarray(normed_a).mean()
 			Vars[D.index(int(level))] = np.asarray(normed_a).var()
 
 		plt.plot(Means)
-		plt.savefig('EEG/engagement/' + user + '/' + session + '/means.png')
+		plt.savefig('Feedback Model/engagement/' + user + '/' + session + '/means.png')
 		for m in Means: 
 			ff.write(str(m) + '\n')
 		ff.close()
