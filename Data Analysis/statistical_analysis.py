@@ -64,7 +64,7 @@ print C2E0.mean(), C2E0.var()
 print ttest_ind(C0E0, C2E0)
 
 ## cluster 0,1,2 on levels 1,2,3,4 over win/loss
-
+# http://hamelg.blogspot.com/2015/11/python-for-data-analysis-part-24.html
 
 
 
