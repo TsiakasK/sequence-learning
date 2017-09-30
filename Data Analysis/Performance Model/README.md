@@ -22,4 +22,4 @@
 - Since there are 4 levels, 3 Robot Feedbacks, and 8 possible previous scores, the length of the simulated data is 96 (4x3x8).
 - At the end, the predicted simulated data vs actual data are plotted and saved in /fig
 
-NOTE: This is first draft of the README.md, and it might be updated later.
+NOTE: This is the first draft of the README.md, and it might be updated later.
