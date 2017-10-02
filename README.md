@@ -1,6 +1,6 @@
 # Interactive Learning and Adaptation for the Sequence Learning task with NAO
 - Data Collection, Modeling and Analysis
-- Policy Gradient Actor Critic Reinforcement Learning 
+- Interactive Reinforcement Learning for Robot Learning  
 - Dynamic User Modeling 
 - EEG engagement monitoring using MUSE (Learning from Feedback)
 - Online GUI Robot Learning (Learning from Guidance)
