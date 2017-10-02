@@ -8,7 +8,7 @@ import re
 import pandas as pd
 from collections import Counter
 
-FILE = 1
+FILE = 4
 
 if FILE == 1: 
 	data = pd.read_csv('../datasets/engagement_means.csv', delimiter=' ')				#1
@@ -28,6 +28,7 @@ C = [C0, C1, C2]
 
 
 filename = open('c0_diff_' + str(FILE) + '.csv', 'w')
+filename.write("ID length robot_feedback previous_score current_result diff\n")
 C0_users = C0['ID'].unique()
 for u in C0_users: 
 	first = 1
@@ -51,6 +52,7 @@ for u in C0_users:
 filename.close()
 
 filename = open('c1_diff_' + str(FILE) + '.csv', 'w')
+filename.write("ID length robot_feedback previous_score current_result diff\n")
 C1_users = C1['ID'].unique()
 for u in C1_users: 
 	first = 1
@@ -74,6 +76,7 @@ for u in C1_users:
 filename.close()
 
 filename = open('c2_diff_' + str(FILE) + '.csv', 'w')
+filename.write("ID length robot_feedback previous_score current_result diff\n")
 C2_users = C2['ID'].unique()
 for u in C2_users: 
 	first = 1
