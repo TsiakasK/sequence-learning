@@ -195,9 +195,9 @@ with open('performance_models_per_cluster','w') as file:
 print "Successfully saved Performance Models for {} Clusters!".format(len(performance_models_per_cluster))
 """
 
-""" Regression Model using NN """
+""" Regression Model"""
 
-
+"""
 rfr_rmse2 = []
 lsvr_rmse2 = []
 nusvr_rmse2 = []
@@ -205,7 +205,7 @@ svr_rmse2 = []
 TR_rmse2 = []
 LR_rmse2 = []
 NN_rmse2 = []
-
+"""
 
 cluster_no = -1
 for cluster in  performance_models_per_cluster:
