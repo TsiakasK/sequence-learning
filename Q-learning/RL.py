@@ -35,12 +35,12 @@ class MDP:
 		    raise ValueError("An MDP must have 0 <= gamma < 1")
 		self.gamma = gamma
 		self.states = set()
-		self.reward = {}
+		self.reward = 0
 	#s	self.T = {}
 
-	def R(self, state):
-		"Return a numeric reward for this state."
-		return self.reward[state]
+	#def R(self, state):
+	#	"Return a numeric reward for this state."
+	#	return self.reward[state]
 
 	#def next(self,state, action):
 	#	"""Transition model.  From a state and an action, return a list

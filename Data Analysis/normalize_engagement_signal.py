@@ -102,6 +102,13 @@ f1.write('ID cluster length robot_feedback previous_score current_score current_
 f2.write('ID cluster length robot_feedback previous_score current_score current_result action engagement\n')
 f3.write('ID cluster length robot_feedback previous_score current_score current_result action engagement\n')
 
+""" varun
+f.write('user_session_ID clusterID length robot_feedback previous_score current_result mean_engagement action\n')
+f1.write('user_session_ID clusterID length robot_feedback previous_score current_result mean_engagement action\n')
+f2.write('user_session_ID clusterID length robot_feedback previous_score current_result mean_engagement action\n')
+f3.write('user_session_ID clusterID length robot_feedback previous_score current_result mean_engagement action\n')
+"""
+
 i = 0 
 for u, c, l, r, p, cr, cs, e, a in zip(U, C, L, RF, PS, CR, CS, points, A): 
 	x = np.asarray(full)[i:i+e].mean()
@@ -109,10 +116,18 @@ for u, c, l, r, p, cr, cs, e, a in zip(U, C, L, RF, PS, CR, CS, points, A):
 	s2 = x2[i:i+e].mean()
 	s3 = x3[i:i+e].mean()
 	
-	f.write(u + ' ' + str(c) + ' ' + str(l) + ' ' + str(r) + ' ' + str(p) + ' ' + str(cs) + ' ' + str(cr) + ' ' + str(a) + ' ' + str(x) + '\n')
+	
+	f.write(u + ' ' + str(c) + ' ' + str(l) + ' ' + str(r) + ' ' + str(p) + ' '  + str(cs) + ' ' + str(cr) + ' ' + str(a) + ' ' + str(x) + '\n')
 	f1.write(u + ' ' + str(c) + ' ' + str(l) + ' ' + str(r) + ' ' + str(p) + ' ' + str(cs) + ' ' + str(cr) + ' ' + str(a) + ' ' + str(s1) + '\n')
 	f2.write(u + ' ' + str(c) + ' ' + str(l) + ' ' + str(r) + ' ' + str(p) + ' ' + str(cs) + ' ' + str(cr) + ' ' + str(a) + ' ' + str(s2) + '\n')
 	f3.write(u + ' ' + str(c) + ' ' + str(l) + ' ' + str(r) + ' ' + str(p) + ' ' + str(cs) + ' ' + str(cr) + ' ' + str(a) + ' ' + str(s3) + '\n')
+	
+	""" varun
+	f.write(u + ' ' +  str(c) + ' ' + str(l) + ' ' + str(r) + ' ' + str(p) + ' ' + str(cr) + ' ' + str(x) + ' ' + str(a) + '\n')
+	f1.write(u + ' ' + str(c) + ' ' + str(l) + ' ' + str(r) + ' ' + str(p) + ' ' + str(cr) + ' ' + str(s1) + ' ' + str(a) + '\n')
+	f2.write(u + ' ' + str(c) + ' ' + str(l) + ' ' + str(r) + ' ' + str(p) + ' ' + str(cr) + ' ' + str(s2) + ' ' + str(a) + '\n')
+	f3.write(u + ' ' + str(c) + ' ' + str(l) + ' ' + str(r) + ' ' + str(p) + ' ' + str(cr) + ' ' + str(s3) + ' ' + str(a) + '\n')
+	"""
 
 	i += e
 

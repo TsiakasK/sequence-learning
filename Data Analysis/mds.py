@@ -61,12 +61,12 @@ for user in users:
 U = user_models
 user_models -= np.asarray(user_models).mean()
 similarities = euclidean_distances(user_models)
-mds = manifold.MDS(n_components=2, max_iter=300, eps=1e-3, random_state=seed, dissimilarity="precomputed", n_jobs=2)
+mds = manifold.MDS(n_components=2, max_iter=300, eps=1e-6, random_state=seed, dissimilarity="precomputed", n_jobs=2)
 pos = mds.fit(similarities).embedding_
 
 for i, p in enumerate(pos): 
 	plt.plot(p[0], p[1], combs[i][0], markersize=9, color = combs[i][1])
-plt.title('MDS wrt difficulty')
+plt.title('Performance-Based Multidimensional Scaling')
 plt.savefig("mds.png")
 plt.close()
 
@@ -77,11 +77,19 @@ kmeans = KMeans(n_clusters=clusters, random_state=0).fit(pos)
 #kmeans = DBSCAN(eps = 0.1, min_samples=15).fit(pos)
 print kmeans.labels_
 mm = ['b', 'r', 'g', 'c']
+first = [1,1,1]
 for i, p in enumerate(pos): 
-	plt.plot(p[0], p[1], 'o', markersize=9, color = mm[kmeans.labels_[i]])
-	plt.text(p[0], p[1], n[i])
+	if first[kmeans.labels_[i]]: 
+		plt.plot(p[0], p[1], 'o', markersize=9, color = mm[kmeans.labels_[i]], label = 'cluster_' + str(kmeans.labels_[i] + 1))
+		first[kmeans.labels_[i]] = 0 
+	else: 
+		plt.plot(p[0], p[1], 'o', markersize=9, color = mm[kmeans.labels_[i]])
+
+	#plt.text(p[0], p[1], n[i])
 	#print name[i][0], kmeans.labels_[i]
-plt.title('MDS - Kmeans')
+plt.legend()
+plt.title('Perfomance-Based Clustering using MDS')
+
 plt.savefig('clustering.png')
 plt.close()
 
@@ -97,7 +105,6 @@ cluster_means = {}
 for cp in CP:
 	cluster_means[cp] = np.asarray(CP[cp]).mean(axis = 0)
 	 
-
 #X = np.asarray(U)
 #kmeans = KMeans(n_clusters=clusters, random_state=0).fit(X)
 #print kmeans.labels_

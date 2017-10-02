@@ -37,7 +37,7 @@ def read_from_file(f):
 	
 	return np.asarray(a).mean(axis=1), np.asarray(b).mean(axis=1),np.asarray(g).mean(axis=1),np.asarray(d).mean(axis=1),np.asarray(t).mean(axis=1)
 
-def ewma(Y, a = 0.15): 
+def ewma(Y, a = 0.1): 
 	S = []
 	for i, y in enumerate(Y): 
 		if i == 0: 
