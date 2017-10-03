@@ -13,7 +13,7 @@ import csv
 import gc
 from random import randint
 import itertools
-from six.moves import cPickle
+#from six.moves import cPickle
 import pickle
 import random
 from datetime import datetime
@@ -83,13 +83,15 @@ def get_next_state(state, states, normalized_states, action, previous, model):
 	
 	next_state = [length, feedback, previous]
 	normalized_next_state =  normalized_states[states.index(tuple(next_state))]
-	prob = model.predict(np.asarray(normalized_next_state).reshape(1,3), batch_size = 1)[0]
+	prob = model.predict(np.asarray(normalized_next_state).reshape(1,3))[0]
 	if random.random() <= prob: 
 		success = 1
 	else: 
 		success = -1
 
 	score = success*levels[length]
+	if score < 0: 
+		score = -1
 	return score, [length, feedback, previous]
 
 
@@ -114,15 +116,16 @@ logfile.write('Interactive: ' + str(interactive_type) + '\n\n')
 logfile.write('Exploration: ' + str(To) + '\n')
 logfile.close()
 
-if int(user) > 0: 
-	f = open('user_models/user' + str(user) + '_engagement.model', 'rb')
-	cmodel = pickle.load(f)
-	f.close()
+#if int(user) > 0: 
+#	f = open('user_models/user' + str(user) + '_engagement.model', 'rb')
+#	cmodel = pickle.load(f)
+#	f.close()
 
 # score prediction network
 f = open('user_models/user' + str(user) + '_performance.model', 'rb')
 model = pickle.load(f)
 f.close()
+#raw_input()
 
 # start and terminal states and indices
 states, normed_states, actions = state_action_space()
@@ -148,7 +151,7 @@ table.Q = Q
 
 egreedy = Policy('egreedy', To)
 alpha = float(0.05)
-gamma = float(0.95)
+gamma = float(0.9)
 learning = Learning('qlearn', [alpha, gamma])
 
 #episodes = 50000
@@ -190,12 +193,14 @@ while (episode < episodes):
 		next_state_index = states.index(tuple(next_state))
 		reward = result
 		
+		#print state, action, next_state, reward
+		
 		engagement = 0
 		#if next_state[1] > 0: 
 		#	reward -= 4
 		#reward = get_engagement(normed_states[next_state_index], cmodel)[0][0]
-		if int(user) > 0: 
-			engagement = get_engagement(normed_states[next_state_index], cmodel)[0][0]
+		#if int(user) > 0: 
+		#	engagement = get_engagement(normed_states[next_state_index], cmodel)[0][0]
 
 		###
 		#reward = 0.6*result + 0.4*engagement
@@ -223,7 +228,7 @@ while (episode < episodes):
 			
 		## LEARNING 
 		if learn: 
-			Q[state_index][:] = learning.update(state_index, action, next_state_index, reward, Q[state_index][:], Q[next_state_index][:])
+			Q[state_index][:] = learning.update(state_index, action, next_state_index, reward, Q[state_index][:], Q[next_state_index][:], done)
 		# Q-augmentation -- after update
 		#if interactive_type:
 		#	Q[state_index][action] = 0.2*engagement

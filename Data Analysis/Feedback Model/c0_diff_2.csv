@@ -1,4 +1,4 @@
-ID length robot_feedback previous_score current_result diff
+ID length robot_feedback previous_score current_result action diff
 user_23/session_1 7 1 -3 -1 3 -0.00605611647
 user_23/session_1 9 0 -3 -1 2 0.007217423455
 user_23/session_1 7 0 -4 1 1 0.007179181413

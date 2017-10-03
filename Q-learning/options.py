@@ -5,9 +5,9 @@ from datetime import datetime
 def GetOptions(argv): 
 	learning = 1 
 	interactive_type = 0
-	name = datetime.now()
-	episodes = 1000
-	epochs = 10 
+	name = str(datetime.now())
+	episodes = 10000
+	epochs = 100 
 	user = 1 
 	Table = 0
 	exploration = 1
@@ -19,7 +19,7 @@ def GetOptions(argv):
 		#print opts, args
 	except getopt.GetoptError:
 		print '\n' + OKGREEN + 'USAGE:\n'
-		print './sequence_learning.py -e episodes -p epochs -q qtable -u user -n name -l learning -i interactive_type -t exploration parameter ' + ENDC + '\n'
+		print './sequence_learning.py -e episodes -p epochs -q qtable -u user -n name -l learning -i interactive_type -t exploration ' + ENDC + '\n'
 		sys.exit(2)
 	for opt, arg in opts:
 		#print opt, arg

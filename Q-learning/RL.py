@@ -97,7 +97,7 @@ class Representation:
 		self.params = params
 		if self.name == 'qtable':
 			[self.actlist, self.states] = self.params
-			self.Q = [[-10.0] * len(self.actlist) for x in range(len(self.states))] 
+			self.Q = [[-10] * len(self.actlist) for x in range(len(self.states))] 
 			 
 
 class Learning:
@@ -109,9 +109,12 @@ class Learning:
 			self.alpha = self.params[0]
 			self.gamma = self.params[1]
 	
-	def update(self, state, action, next_state, reward, Q_state, Q_next_state):
+	def update(self, state, action, next_state, reward, Q_state, Q_next_state, done):
 		#print state, action, next_state, reward, Q_state, Q_next_state
-		Q_state[action] =  Q_state[action] + self.alpha*(reward + self.gamma*max(Q_next_state) - Q_state[action])
+		if done: 
+			Q_state[action] =  Q_state[action] + self.alpha*(reward - Q_state[action])
+		else: 
+			Q_state[action] =  Q_state[action] + self.alpha*(reward + self.gamma*max(Q_next_state) - Q_state[action])
 		return Q_state
 		
 
