@@ -29,17 +29,16 @@ def state_action_space():
 	states = list(itertools.product(*combs))
 	states.append((0,0,0))
 	
-	l = [0.0, 0.333, 0.666, 1.0]
-	f = [0.0, 0.5, 1.0]
-	pr = [0.0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1.0]
-	combs = (l, f, pr)
+	l = [1, 2, 3, 4]
+	f = [[1,0,0], [0,1,0], [0,0,1]]
+	combs = (l, f, previous)
 	normalized_states = list(itertools.product(*combs))
 
 	actions = [0,1,2,3,4,5]
-	
-	return states, normalized_states, actions
+	actions_oh = [[1,0,0,0,0,0], [0,1,0,0,0,0], [0,0,1,0,0,0], [0,0,0,1,0,0], [0,0,0,0,1,0], [0,0,0,0,0,1]]
+	return states, normalized_states, actions, actions_oh
 
-def get_engagement(state, model):
+def get_engagement(state, model, action_oh):
 	#actions = {0:0, 1:0.2, 2:0.4, 3:0.6, 4:0.8 , 5:1.0 }
 	#normalized_array =  normalized_states[states.index(tuple(state))]
 	#normalized_array = list(normalized_array)
@@ -83,7 +82,9 @@ def get_next_state(state, states, normalized_states, action, previous, model):
 	
 	next_state = [length, feedback, previous]
 	normalized_next_state =  normalized_states[states.index(tuple(next_state))]
-	prob = model.predict(np.asarray(normalized_next_state).reshape(1,3))[0]
+	st = normalized_next_state[0], normalized_next_state[1][0], normalized_next_state[1][1], normalized_next_state[1][2], normalized_next_state[2]
+	prob = model.predict(np.asarray(st).reshape(1,5))[0]
+
 	if random.random() <= prob: 
 		success = 1
 	else: 
@@ -128,8 +129,10 @@ f.close()
 #raw_input()
 
 # start and terminal states and indices
-states, normed_states, actions = state_action_space()
+states, normed_states, actions, actions_oh = state_action_space()
 A = ['L = 3', 'L = 5', 'L = 7', 'L = 9' , 'PF', 'NF']
+
+
 
 first_length = random.choice([3,5,7,9])
 start_state = (first_length,0,0)
@@ -190,6 +193,7 @@ while (episode < episodes):
 		egreedy.Q_state = Q[state_index][:]
 		action = egreedy.return_action()
 		result, next_state = get_next_state(state, states, normed_states, action, previous_result, model)
+		
 		next_state_index = states.index(tuple(next_state))
 		reward = result
 		
