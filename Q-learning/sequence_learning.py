@@ -33,6 +33,7 @@ def state_action_space():
 	f = [[1,0,0], [0,1,0], [0,0,1]]
 	combs = (l, f, previous)
 	normalized_states = list(itertools.product(*combs))
+	normalized_states.append((0,[0,0,0],0))
 
 	actions = [0,1,2,3,4,5]
 	actions_oh = [[1,0,0,0,0,0], [0,1,0,0,0,0], [0,0,1,0,0,0], [0,0,0,1,0,0], [0,0,0,0,1,0], [0,0,0,0,0,1]]
@@ -53,12 +54,17 @@ def get_engagement(state, model, action_oh):
 
 def get_next_state(state, states, normalized_states, action, previous, model):
 	levels = {3:1, 5:2, 7:3, 9:4}
+
 	#normalized_state =  normalized_states[states.index(tuple(state))]
-	#prob = model.predict(np.asarray(normalized_state).reshape(1,3), batch_size = 1)[0]
+	#st = normalized_state[0], normalized_state[1][0], normalized_state[1][1], normalized_state[1][2], normalized_state[2]
+	#prob = model.predict(np.asarray(st).reshape(1,5))[0]
+
 	#if random.random() <= prob: 
 	#	success = 1
 	#else: 
 	#	success = -1
+
+	#previous = success*normalized_state[0]
 
 	#previous = success*levels[state[0]]
 	if action == 0: 
@@ -91,10 +97,14 @@ def get_next_state(state, states, normalized_states, action, previous, model):
 		success = -1
 
 	score = success*levels[length]
-	if score < 0: 
-		score = -1
+	#if score < 0: 
+	#	score = -1
 	return score, [length, feedback, previous]
 
+def moving_average(a, n=100) :
+    ret = np.cumsum(a, dtype=float)
+    ret[n:] = ret[n:] - ret[:-n]
+    return ret[n - 1:] / n
 
 episodes, epochs, user, q, name, learn, interactive_type, To = GetOptions(sys.argv[1::])
 
@@ -123,7 +133,7 @@ logfile.close()
 #	f.close()
 
 # score prediction network
-f = open('user_models/user' + str(user) + '_performance.model', 'rb')
+f = open('user_models/none/user' + str(user) + '_performance.model', 'rb')
 model = pickle.load(f)
 f.close()
 #raw_input()
@@ -132,10 +142,9 @@ f.close()
 states, normed_states, actions, actions_oh = state_action_space()
 A = ['L = 3', 'L = 5', 'L = 7', 'L = 9' , 'PF', 'NF']
 
-
-
 first_length = random.choice([3,5,7,9])
-start_state = (first_length,0,0)
+#start_state = (first_length,0,0)
+start_state = (0,0,0)
 start_state_index = states.index(tuple(start_state))
 
 # define MDP and policy
@@ -152,10 +161,11 @@ if q:
 	ins.close()	
 table.Q = Q
 
-egreedy = Policy('egreedy', To)
-alpha = float(0.05)
-gamma = float(0.9)
-learning = Learning('qlearn', [alpha, gamma])
+To = 100
+egreedy = Policy('softmax',To)
+alpha = float(0.1)
+gamma = float(0.99)
+learning = Learning('sarsa', [alpha, gamma])
 
 #episodes = 50000
 #epochs = 100
@@ -165,10 +175,11 @@ V = []
 S = []
 
 ENG = []
+visits = np.ones((len(states)+1))
 
 while (episode < episodes): 
-	start_state = (first_length,0,0)
-	start_state_index = states.index(tuple(start_state))
+	#start_state = (first_length,0,0)
+	#start_state_index = states.index(tuple(start_state))
 	state_index = start_state_index
 	state = start_state
 	score = 0
@@ -177,25 +188,42 @@ while (episode < episodes):
 	done = 0 	
 	r = 0 
 	quit_signal = 0 
-	N = 20 
+	N = 25 
 	previous_result = 0 
 	EE = []
 	random.seed(datetime.now())
 
 	if episode % epochs == 0 or episode == 1:
 		g.write('Episode No.' + str(episode) + '\n')
-	if episode % 1000 == 0 or episode == 1:
 		print episode, egreedy.param
-
 
 	while(not done):
 		state_index = states.index(tuple(state))
 		egreedy.Q_state = Q[state_index][:]
+		
+		# adaptive exploration per state visit
+		egreedy.param = To - 10*float(visits[state_index])
+		
+		if egreedy.param < 1.2: 
+			egreedy.param = 1.2 		
+		
+		if episode%epochs == 0: 
+			visits[state_index] += 1
+
+		# robot feedback (actions 4,5) is not available on first state
+		if state_index == start_state_index: 
+			egreedy.Q_state = Q[state_index][:4]
+
 		action = egreedy.return_action()
 		result, next_state = get_next_state(state, states, normed_states, action, previous_result, model)
-		
+
 		next_state_index = states.index(tuple(next_state))
-		reward = result
+
+		reward = result if result > 0 else -1
+
+		# sarsa
+		egreedy.Q_next_state = Q[next_state_index][:]
+		next_action = egreedy.return_action()
 		
 		#print state, action, next_state, reward
 		
@@ -231,22 +259,26 @@ while (episode < episodes):
 			reward += 0.9*engagement 
 			
 		## LEARNING 
+		#print state_index, action, reward
 		if learn: 
-			Q[state_index][:] = learning.update(state_index, action, next_state_index, reward, Q[state_index][:], Q[next_state_index][:], done)
+			Q[state_index][:] = learning.update(state_index, action, next_state_index, next_action, reward, Q[state_index][:], Q[next_state_index][:], done)
+			#print Q[state_index][:]
+			#raw_input()
 		# Q-augmentation -- after update
 		#if interactive_type:
 		#	Q[state_index][action] = 0.2*engagement
 
 		state = next_state
 		previous_result = result
-		v_avg = np.asarray(Q).max(axis=1).mean()
+		#v_avg = np.asarray(Q).max(axis=1).mean()
+		v_avg = max(Q[start_state_index][:])
 		
-	if egreedy.param > 0: 
-		egreedy.param = To - (10*To*float(episode))/(6*float(episodes)) 
+	#if egreedy.param < 5: 
+	#	egreedy.param = To - (10*To*float(episode))/(8*float(episodes)) 
 	
-	if egreedy.param < 0: 
-		egreedy.param = 0 
-		print "no exploration at episode " + str(episode)  
+	#if egreedy.param < 0: 
+	#	egreedy.param = 0 
+	#	print "no exploration at episode " + str(episode)  
 
 	episode += 1
 	R.append(r)
@@ -262,6 +294,7 @@ with open('results/' + name + '/q_table', 'w') as f:
 	writer = csv.writer(f,delimiter=' ')
 	writer.writerows(Q)
 
+"""
 tmp = []
 return_epoch = []
 for i, t in enumerate(R):
@@ -270,8 +303,9 @@ for i, t in enumerate(R):
 		a = np.asarray(tmp)
 		return_epoch.append(a.mean())
 		tmp = []
+"""
 
-plt.plot(return_epoch)
+plt.plot(moving_average(R))
 plt.savefig('results/' + name + '/return.png')
 plt.close()
 
@@ -284,7 +318,7 @@ for i, t in enumerate(ENG):
 		eng_epoch.append(a.mean())
 		tmp = []
 
-plt.plot(eng_epoch)
+plt.plot(moving_average(ENG))
 plt.savefig('results/' + name + '/engagement.png')
 plt.close()
 
@@ -297,7 +331,7 @@ for i, t in enumerate(V):
 		v_epoch.append(a.mean())
 		tmp = []
 
-plt.plot(v_epoch)
+plt.plot(moving_average(V))
 plt.savefig('results/' + name + '/mean_v(s).png')
 plt.close()
 
@@ -310,6 +344,13 @@ for i, t in enumerate(S):
 		score_epoch.append(a.mean())
 		tmp = []
 
-plt.plot(score_epoch)
+plt.plot(moving_average(S))
 plt.savefig('results/' + name + '/score.png')
 plt.close()
+
+
+pf = open('results/' + name + '/policy','w')
+for s in states: 
+	state_index = states.index(tuple(s))
+	argmaxQ = np.argmax(Q[state_index][:])
+	pf.write(str(state_index) + ' ' + str(s) + ' ' + str(argmaxQ) + '\n')

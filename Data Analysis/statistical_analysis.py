@@ -115,9 +115,17 @@ C3L3P1 = L3P1.loc[L3P1['cluster']==3]
 C3L4P0 = L4P0.loc[L4P0['cluster']==3]
 C3L4P1 = L4P1.loc[L4P1['cluster']==3]
 
+
+# correlation of performance and engagement 
+print  C[['length', 'current_result']].corr()
+print  C0[['length', 'current_result']].corr()
+print  C1[['length', 'current_result']].corr()
+print  C2[['length', 'current_result']].corr()
+
 # mean engagements over sussess/failure
 print "mean engagement over performance"
 print ttest_ind(P0[['engagement']], P1[['engagement']])
+
 
 # mean engagements over sussess/failure on each level 
 print "mean engagement over performance in all levels"

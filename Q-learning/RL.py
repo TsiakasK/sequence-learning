@@ -36,16 +36,6 @@ class MDP:
 		self.gamma = gamma
 		self.states = set()
 		self.reward = 0
-	#s	self.T = {}
-
-	#def R(self, state):
-	#	"Return a numeric reward for this state."
-	#	return self.reward[state]
-
-	#def next(self,state, action):
-	#	"""Transition model.  From a state and an action, return a list
-	#	of (result-state, probability) pairs."""
-	#	return self.T[state]
 		
 	def actions(self, state):
 		"""Set of actions that can be performed in this state.  By default, a
@@ -73,12 +63,8 @@ class Policy:
 			
 			for i in range(n):
 				softm = ( np.exp(av[i] / tau) / np.sum( np.exp(av[:] / tau) ) )
-				#if i == 0: 
 				probs[i] = softm
-				#else:
-				#probs[i] = softm + probs[i-1]
-			
-			#return cdf(probs)
+				
 			return np.where(np.random.multinomial(1,probs))[0][0]
 
 		if self.name == 'egreedy': 
@@ -97,7 +83,7 @@ class Representation:
 		self.params = params
 		if self.name == 'qtable':
 			[self.actlist, self.states] = self.params
-			self.Q = [[-10] * len(self.actlist) for x in range(len(self.states))] 
+			self.Q = [[0.0] * len(self.actlist) for x in range(len(self.states))] 
 			 
 
 class Learning:
@@ -105,16 +91,24 @@ class Learning:
 	def __init__(self, name, params):
 		self.name = name
 		self.params = params
-		if self.name == 'qlearn':
+		if self.name == 'qlearn' or self.name == 'sarsa':
 			self.alpha = self.params[0]
 			self.gamma = self.params[1]
 	
-	def update(self, state, action, next_state, reward, Q_state, Q_next_state, done):
-		#print state, action, next_state, reward, Q_state, Q_next_state
+	def update(self, state, action, next_state, next_action, reward, Q_state, Q_next_state, done):
 		if done: 
 			Q_state[action] =  Q_state[action] + self.alpha*(reward - Q_state[action])
 		else: 
-			Q_state[action] =  Q_state[action] + self.alpha*(reward + self.gamma*max(Q_next_state) - Q_state[action])
+			if self.name == 'qlearn':
+				#print "qlearn"
+				Q_state[action] +=  self.alpha*(reward + self.gamma*max(Q_next_state) - Q_state[action])
+			if self.name == 'sarsa':
+				#print "sarsa: Q[state][action]: "
+				#print Q_state[action]
+				learning =  self.alpha*(reward + self.gamma*Q_next_state[next_action] - Q_state[action])
+				#print learning 				
+				Q_state[action] = Q_state[action] + learning
+				#print Q_state[action]
 		return Q_state
 		
 
@@ -131,3 +125,4 @@ egreedy = Policy('egreedy', 0, [1.2, 2.2, 13.4, 12.3])
 a = egreedy.return_action()
 print a
 """
+
