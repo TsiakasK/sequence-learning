@@ -1,0 +1,29 @@
+"/Users/Maher/Cloud/Box Sync/Current Projects/Sequence Learning V2/env/bin/python" "/Users/Maher/Cloud/Box Sync/Current Projects/Sequence Learning V2/Code/Performance_Model/prepare_performance_model.py"
+There are 3 clusters
+Successfully saved Normalized Performance Data for 1 Clusters!
+Successfully saved Normalized Performance Data for 2 Clusters!
+Successfully saved Normalized Performance Data for 3 Clusters!
+>>>>>>>>>> Inside Cluster 0 <<<<<<<<<<
+		Training Data: SVR Root Mean Square Error = 0.15
+		Testing Data: SVR Root Mean Square Error = 0.25
+		All Data: SVR Root Mean Square Error = 0.17
+Successfully saved Performance Model for cluster 0
+>>>>>>>>>> Inside Cluster 1 <<<<<<<<<<
+		Training Data: SVR Root Mean Square Error = 0.20
+		Testing Data: SVR Root Mean Square Error = 0.18
+		All Data: SVR Root Mean Square Error = 0.19
+Successfully saved Performance Model for cluster 1
+>>>>>>>>>> Inside Cluster 2 <<<<<<<<<<
+		Training Data: SVR Root Mean Square Error = 0.24
+		Testing Data: SVR Root Mean Square Error = 0.25
+		All Data: SVR Root Mean Square Error = 0.24
+Successfully saved Performance Model for cluster 2
+####################################################################
+#################### All Clusters Combined #########################
+Successfully read  3 Clusters !!!
+		Training Data: SVR Root Mean Square Error = 0.25
+		Testing Data: SVR Root Mean Square Error = 0.26
+
+End of the Program
+
+Process finished with exit code 0
