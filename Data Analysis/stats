@@ -1,3 +1,24 @@
+
+ALL               length  current_result
+length          1.000000       -0.597438
+current_result -0.597438        1.000000
+
+
+C0                 length  current_result
+length          1.00000        -0.62879
+current_result -0.62879         1.00000
+
+
+C1                length  current_result
+length          1.0000         -0.7115
+current_result -0.7115          1.0000
+
+
+C2                  length  current_result
+length          1.000000       -0.424689
+current_result -0.424689        1.000000
+
+
 mean engagement over performance
 Ttest_indResult(statistic=array([-1.9205683]), pvalue=array([ 0.05498581]))
 
@@ -6,15 +27,6 @@ Ttest_indResult(statistic=array([-0.96749099]), pvalue=array([ 0.3340677]))
 Ttest_indResult(statistic=array([-2.14196323]), pvalue=array([ 0.03281527]))
 Ttest_indResult(statistic=array([-0.842406]), pvalue=array([ 0.40005427]))
 Ttest_indResult(statistic=array([-1.96587644]), pvalue=array([ 0.05019093]))
-
-mean engagement C0-C1
-Ttest_indResult(statistic=array([-7.60777907]), pvalue=array([  6.19052529e-14]))
-
-mean engagement C0-C2
-Ttest_indResult(statistic=array([-10.26132751]), pvalue=array([  1.95124704e-23]))
-
-mean engagement C1-C2
-Ttest_indResult(statistic=array([-1.76850317]), pvalue=array([ 0.07731628]))
 
 mean engagement in all levels C0-C1
 Ttest_indResult(statistic=array([-3.45398607]), pvalue=array([ 0.00066045]))
@@ -34,32 +46,33 @@ Ttest_indResult(statistic=array([-1.10302112]), pvalue=array([ 0.27110469]))
 Ttest_indResult(statistic=array([-0.50570967]), pvalue=array([ 0.61349394]))
 Ttest_indResult(statistic=array([-0.55630706]), pvalue=array([ 0.57863552]))
 
+cluster 1 - mean engagement over failure/success
+Ttest_indResult(statistic=array([-2.51331117]), pvalue=array([ 0.01225985]))
+
+cluster 2 - mean engagement over failure/success
+Ttest_indResult(statistic=array([-0.78709015]), pvalue=array([ 0.43158562]))
+
+cluster 3 - mean engagement over failure/success
+Ttest_indResult(statistic=array([-1.2298745]), pvalue=array([ 0.21951926]))
+
 cluster 1 - mean engagement in all levels over failure/success
 Ttest_indResult(statistic=array([ nan]), pvalue=array([ nan]))
-(1, 1) (108, 1)
 Ttest_indResult(statistic=array([-1.22476915]), pvalue=array([ 0.22266197]))
-(12, 1) (134, 1)
 Ttest_indResult(statistic=array([-0.70084342]), pvalue=array([ 0.48449377]))
-(53, 1) (98, 1)
 Ttest_indResult(statistic=array([-2.45075167]), pvalue=array([ 0.01573517]))
-(99, 1) (20, 1)
 
 cluster 2 - mean engagement in all levels over failure/success
 Ttest_indResult(statistic=array([-0.66450372]), pvalue=array([ 0.50769823]))
-(2, 1) (115, 1)
 Ttest_indResult(statistic=array([-2.08801092]), pvalue=array([ 0.03866194]))
-(29, 1) (109, 1)
 Ttest_indResult(statistic=array([-0.78299048]), pvalue=array([ 0.43482738]))
-(107, 1) (50, 1)
 Ttest_indResult(statistic=array([-1.26392549]), pvalue=array([ 0.20890463]))
-(109, 1) (4, 1)
 
 cluster 3 - mean engagement in all levels over failure/success
 Ttest_indResult(statistic=array([ nan]), pvalue=array([ nan]))
-(1, 1) (79, 1)
 Ttest_indResult(statistic=array([-0.55170471]), pvalue=array([ 0.58231191]))
-(7, 1) (101, 1)
 Ttest_indResult(statistic=array([-1.77875792]), pvalue=array([ 0.07831817]))
-(41, 1) (61, 1)
 Ttest_indResult(statistic=array([-0.02614597]), pvalue=array([ 0.97920367]))
-(38, 1) (47, 1)
+
+means and vars
+[0.54656316252841175, 0.54793982840708166, 0.54815851525814152, 0.54797880186061509]
+[0.00076060819411068561, 0.00086278337772497434, 0.00097988204153232495, 0.0011302832819118965]
