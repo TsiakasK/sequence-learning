@@ -101,7 +101,7 @@ def get_next_state(state, states, normalized_states, action, previous, model):
 	#	score = -1
 	return score, [length, feedback, previous]
 
-def moving_average(a, n=100) :
+def moving_average(a, n=200) :
     ret = np.cumsum(a, dtype=float)
     ret[n:] = ret[n:] - ret[:-n]
     return ret[n - 1:] / n
@@ -113,8 +113,9 @@ if not os.path.exists('results/' + str(name)):
 g = open('results/' + name + '/episodes', 'w')
 rr = open('results/' + name + '/return', 'w')
 ss = open('results/' + name + '/score', 'w')
-vv = open('results/' + name + '/mean_v(s)', 'w')
+vv = open('results/' + name + '/v_start', 'w')
 ee = open('results/' + name + '/engagement', 'w')
+er = open('results/' + name + '/error', 'w')
 
 logfile = open('results/' + name + '/logfile', 'w')
 logfile.write('logfile for: '  + str(name) + ' - ' + str(datetime.now()) + '\n\n')
@@ -161,22 +162,20 @@ if q:
 	ins.close()	
 table.Q = Q
 
-To = 100
 egreedy = Policy('softmax',To)
-alpha = float(0.1)
-gamma = float(0.99)
+alpha = float(0.25)
+gamma = float(0.95)
 learning = Learning('sarsa', [alpha, gamma])
 
-#episodes = 50000
-#epochs = 100
-episode = 1
 R = []
 V = []
 S = []
-
 ENG = []
+ER = []
+print start_state_index
 visits = np.ones((len(states)+1))
-
+episode = 1
+first_reward = 1
 while (episode < episodes): 
 	#start_state = (first_length,0,0)
 	#start_state_index = states.index(tuple(start_state))
@@ -191,6 +190,7 @@ while (episode < episodes):
 	N = 25 
 	previous_result = 0 
 	EE = []
+	ERROR = []
 	random.seed(datetime.now())
 
 	if episode % epochs == 0 or episode == 1:
@@ -202,10 +202,10 @@ while (episode < episodes):
 		egreedy.Q_state = Q[state_index][:]
 		
 		# adaptive exploration per state visit
-		egreedy.param = To - 10*float(visits[state_index])
+		egreedy.param = To - 5*float(visits[state_index])
 		
-		if egreedy.param < 1.2: 
-			egreedy.param = 1.2 		
+		if egreedy.param < 1: 
+			egreedy.param = 1		
 		
 		if episode%epochs == 0: 
 			visits[state_index] += 1
@@ -219,7 +219,7 @@ while (episode < episodes):
 
 		next_state_index = states.index(tuple(next_state))
 
-		reward = result if result > 0 else -1
+		reward = result if result > 0.0 else 0.0
 
 		# sarsa
 		egreedy.Q_next_state = Q[next_state_index][:]
@@ -243,7 +243,7 @@ while (episode < episodes):
 		#if interactive_type: 			
 		#	reward += 0.5*(1.0 - engagement) 
 	
-		r += (learning.gamma**(iteration))*reward
+		r += (learning.gamma**(iteration-1))*reward
 		score += result
 
 		if episode % epochs == 0 or episode == 1:
@@ -261,7 +261,7 @@ while (episode < episodes):
 		## LEARNING 
 		#print state_index, action, reward
 		if learn: 
-			Q[state_index][:] = learning.update(state_index, action, next_state_index, next_action, reward, Q[state_index][:], Q[next_state_index][:], done)
+			Q[state_index][:], error = learning.update(state_index, action, next_state_index, next_action, reward, Q[state_index][:], Q[next_state_index][:], done)
 			#print Q[state_index][:]
 			#raw_input()
 		# Q-augmentation -- after update
@@ -270,8 +270,10 @@ while (episode < episodes):
 
 		state = next_state
 		previous_result = result
+		ERROR.append(abs(error))
+		
 		#v_avg = np.asarray(Q).max(axis=1).mean()
-		v_avg = max(Q[start_state_index][:])
+		#v_avg = max(Q[start_state_index][:])
 		
 	#if egreedy.param < 5: 
 	#	egreedy.param = To - (10*To*float(episode))/(8*float(episodes)) 
@@ -282,19 +284,23 @@ while (episode < episodes):
 
 	episode += 1
 	R.append(r)
-	V.append(v_avg)
-	vv.write(str(v_avg) + '\n')
+	V.append(max(Q[start_state_index][:]))
+	ER.append(np.asarray(ERROR).mean())
+	vv.write(str(max(Q[start_state_index][:])) + '\n')
 	rr.write(str(r) + '\n')
 	ss.write(str(score) + '\n')
 	ee.write(str(np.asarray(EE).mean()) + '\n')
+	er.write(str(np.asarray(ERROR).mean()) + '\n')
 	S.append(score)
 	ENG.append(np.asarray(EE).mean())
+
+print visits
 	
 with open('results/' + name + '/q_table', 'w') as f:
 	writer = csv.writer(f,delimiter=' ')
 	writer.writerows(Q)
 
-"""
+
 tmp = []
 return_epoch = []
 for i, t in enumerate(R):
@@ -303,9 +309,9 @@ for i, t in enumerate(R):
 		a = np.asarray(tmp)
 		return_epoch.append(a.mean())
 		tmp = []
-"""
 
-plt.plot(moving_average(R))
+plt.plot(return_epoch)
+#plt.plot(moving_average(R))
 plt.savefig('results/' + name + '/return.png')
 plt.close()
 
@@ -318,7 +324,7 @@ for i, t in enumerate(ENG):
 		eng_epoch.append(a.mean())
 		tmp = []
 
-plt.plot(moving_average(ENG))
+plt.plot(eng_epoch)
 plt.savefig('results/' + name + '/engagement.png')
 plt.close()
 
@@ -331,7 +337,7 @@ for i, t in enumerate(V):
 		v_epoch.append(a.mean())
 		tmp = []
 
-plt.plot(moving_average(V))
+plt.plot(v_epoch)
 plt.savefig('results/' + name + '/mean_v(s).png')
 plt.close()
 
@@ -344,8 +350,22 @@ for i, t in enumerate(S):
 		score_epoch.append(a.mean())
 		tmp = []
 
-plt.plot(moving_average(S))
+plt.plot(score_epoch)
 plt.savefig('results/' + name + '/score.png')
+plt.close()
+
+
+tmp = []
+error_epoch = []
+for i, t in enumerate(ER):
+	tmp.append(t)
+	if i%epochs == 0:
+		a = np.asarray(tmp)
+		error_epoch.append(a.mean())
+		tmp = []
+
+plt.plot(error_epoch)
+plt.savefig('results/' + name + '/error.png')
 plt.close()
 
 
