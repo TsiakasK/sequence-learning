@@ -39,18 +39,44 @@ def state_action_space():
 	actions_oh = [[1,0,0,0,0,0], [0,1,0,0,0,0], [0,0,1,0,0,0], [0,0,0,1,0,0], [0,0,0,0,1,0], [0,0,0,0,0,1]]
 	return states, normalized_states, actions, actions_oh
 
-def get_engagement(state, model, action_oh):
+def get_engagement(state, result, model):
 	#actions = {0:0, 1:0.2, 2:0.4, 3:0.6, 4:0.8 , 5:1.0 }
 	#normalized_array =  normalized_states[states.index(tuple(state))]
 	#normalized_array = list(normalized_array)
 	#normalized_array.append(actions[action])
-	X = np.asarray([state[0], state[1], state[2]])
+	
+	outcome = 1 if result > 0 else -1
+	#state.append(result)
+	#print state
+	#raw_input()
+	st = state[0], state[1][0], state[1][1], state[1][2], state[2], outcome
+	#prob = model.predict(np.asarray(st).reshape(1,5))[0]
+	#X = np.asarray([state[0], state[1], state[2]])
 	#X.reshape(-1, 1)
-	engagement =  model.predict(X.reshape(1, -1))
+	engagement =  model.predict(np.asarray(st).reshape(1,6))[0]
 	#print X
 	#print concentration
 	return engagement
 
+
+def get_diff(state, result, action, model):
+	#actions = {0:0, 1:0.2, 2:0.4, 3:0.6, 4:0.8 , 5:1.0 }
+	#normalized_array =  normalized_states[states.index(tuple(state))]
+	#normalized_array = list(normalized_array)
+	#normalized_array.append(actions[action])
+	
+	outcome = 1 if result > 0 else -1
+	#state.append(result)
+	#print state
+	#raw_input()
+	st = state[0], state[1][0], state[1][1], state[1][2], state[2], outcome, action[0], action[1], action[2], action[3], action[4], action[5]
+	#prob = model.predict(np.asarray(st).reshape(1,5))[0]
+	#X = np.asarray([state[0], state[1], state[2]])
+	#X.reshape(-1, 1)
+	engagement =  model.predict(np.asarray(st).reshape(1,6))[0]
+	#print X
+	#print concentration
+	return engagement
 
 def get_next_state(state, states, normalized_states, action, previous, model):
 	levels = {3:1, 5:2, 7:3, 9:4}
@@ -128,10 +154,10 @@ logfile.write('Interactive: ' + str(interactive_type) + '\n\n')
 logfile.write('Exploration: ' + str(To) + '\n')
 logfile.close()
 
-#if int(user) > 0: 
-#	f = open('user_models/user' + str(user) + '_engagement.model', 'rb')
-#	cmodel = pickle.load(f)
-#	f.close()
+
+f = open('user_models/user' + str(user) + '_engagement.model', 'rb')
+cmodel = pickle.load(f)
+f.close()
 
 # score prediction network
 f = open('user_models/none/user' + str(user) + '_performance.model', 'rb')
@@ -163,7 +189,7 @@ if q:
 table.Q = Q
 
 egreedy = Policy('softmax',To)
-alpha = float(0.25)
+alpha = float(0.1)
 gamma = float(0.95)
 learning = Learning('sarsa', [alpha, gamma])
 
@@ -232,8 +258,9 @@ while (episode < episodes):
 		#	reward -= 4
 		#reward = get_engagement(normed_states[next_state_index], cmodel)[0][0]
 		#if int(user) > 0: 
-		#	engagement = get_engagement(normed_states[next_state_index], cmodel)[0][0]
-
+		
+		engagement = get_engagement(normed_states[next_state_index], result, cmodel)
+		#print engagement
 		###
 		#reward = 0.6*result + 0.4*engagement
 		###
@@ -256,7 +283,7 @@ while (episode < episodes):
 
 		# reward shaping -- before update
 		if interactive_type:
-			reward += 0.9*engagement 
+			reward += 0.5*engagement 
 			
 		## LEARNING 
 		#print state_index, action, reward

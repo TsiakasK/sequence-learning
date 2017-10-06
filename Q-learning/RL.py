@@ -83,7 +83,7 @@ class Representation:
 		self.params = params
 		if self.name == 'qtable':
 			[self.actlist, self.states] = self.params
-			self.Q = [[-10.0] * len(self.actlist) for x in range(len(self.states))] 
+			self.Q = [[0.0] * len(self.actlist) for x in range(len(self.states))] 
 			 
 
 class Learning:
