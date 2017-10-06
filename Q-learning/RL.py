@@ -83,7 +83,7 @@ class Representation:
 		self.params = params
 		if self.name == 'qtable':
 			[self.actlist, self.states] = self.params
-			self.Q = [[0.0] * len(self.actlist) for x in range(len(self.states))] 
+			self.Q = [[-10.0] * len(self.actlist) for x in range(len(self.states))] 
 			 
 
 class Learning:
@@ -98,10 +98,13 @@ class Learning:
 	def update(self, state, action, next_state, next_action, reward, Q_state, Q_next_state, done):
 		if done: 
 			Q_state[action] =  Q_state[action] + self.alpha*(reward - Q_state[action])
+			error = reward - Q_state[action]
 		else: 
 			if self.name == 'qlearn':
 				#print "qlearn"
 				Q_state[action] +=  self.alpha*(reward + self.gamma*max(Q_next_state) - Q_state[action])
+				error = reward + self.gamma*max(Q_next_state) - Q_state[action]
+
 			if self.name == 'sarsa':
 				#print "sarsa: Q[state][action]: "
 				#print Q_state[action]
@@ -109,7 +112,8 @@ class Learning:
 				#print learning 				
 				Q_state[action] = Q_state[action] + learning
 				#print Q_state[action]
-		return Q_state
+				error = reward + self.gamma*Q_next_state[next_action] - Q_state[action]
+		return Q_state, error
 		
 
 """
@@ -125,4 +129,3 @@ egreedy = Policy('egreedy', 0, [1.2, 2.2, 13.4, 12.3])
 a = egreedy.return_action()
 print a
 """
-
