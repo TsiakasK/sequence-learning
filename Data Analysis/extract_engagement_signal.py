@@ -20,7 +20,7 @@ def load_clusters(filename):
 	return Clusters		
 
 def read_from_file(f):
-	a, b, g, d, t = [], [], [], [], []
+	a, b, g, d, t, c = [], [], [], [], [], []
 	lines = f.readlines()
 	for line in lines:	
 		w = line.split()
@@ -34,10 +34,12 @@ def read_from_file(f):
 			d.append([float(w[1]), float(w[2]), float(w[3]), float(w[4])])
 		elif w[0] == 't': 
 			t.append([float(w[1]), float(w[2]), float(w[3]), float(w[4])])
+		elif w[0] == 'c':
+			c.append(float(w[1]))
 	
-	return np.asarray(a).mean(axis=1), np.asarray(b).mean(axis=1),np.asarray(g).mean(axis=1),np.asarray(d).mean(axis=1),np.asarray(t).mean(axis=1)
+	return np.asarray(a).mean(axis=1), np.asarray(b).mean(axis=1),np.asarray(g).mean(axis=1),np.asarray(d).mean(axis=1),np.asarray(t).mean(axis=1), c
 
-def ewma(Y, a = 0.02): 
+def ewma(Y, a = 0.05): 
 	S = []
 	for i, y in enumerate(Y): 
 		if i == 0: 
@@ -48,12 +50,13 @@ def ewma(Y, a = 0.02):
 
 clusters = load_clusters('datasets/user_clusters.csv')
 
-if not os.path.exists('EEG_analysis/engagement/'):
-	os.makedirs('EEG_analysis/engagement/')
+if not os.path.exists('EEG_analysis/'):
+	os.makedirs('EEG_analysis/')
 
+index = 3
 dirname = "clean_data"
 users = os.listdir(dirname)
-efile = open('datasets/engagement_relative','w')
+efile = open('datasets/index_' + str(index),'w')
 D = [3,5,7,9]
 F = 1 
 FULL = []
@@ -64,12 +67,11 @@ for user in users:
 		EE = []
 		turn_mean = []
 		i = 0
-		if not os.path.exists('EEG_analysis/engagement/' + user + '/' + session):
-			os.makedirs('EEG_analysis/engagement/' + user + '/' + session)
 
-		#print user + '/' + session
+		if not os.path.exists('EEG_analysis/' + user + '/' + session):
+			os.makedirs('EEG_analysis/' + user + '/' + session)
 
-		ff = open('EEG_analysis/engagement/' + user + '/' + session + '/relative', 'w')
+		ff = open('EEG_analysis/' + user + '/' + session + '/index_' + str(index), 'w')
 		
 		file_name = dirname + '/' + user + '/' + session
 		log1 = open(file_name + '/state_EEG', 'r')
@@ -110,19 +112,24 @@ for user in users:
 					efile.write(' ' + str(action) + '\n')
 					ff.write(' ' + str(action) + '\n')
 
-			#print "opening: " + file_name + '/' + eeg_filename
 			f = open(file_name + '/' + eeg_filename, 'r')
-			a, b, g, d, t = read_from_file(f)
+			a, b, g, d, t, c = read_from_file(f)
 			a_smoothed = ewma(a)
 			b_smoothed = ewma(b)
 			t_smoothed = ewma(t)
+			concentration = ewma(c)
 
-			e = [x+y for x, y in zip(a_smoothed, t_smoothed)]
-			engagement = [x/y for x, y in zip(b_smoothed, e)]
-			#plt.hist(engagement)
-			#plt.title(str(np.asarray(engagement).mean()) + ' ' + str(np.asarray(engagement).std()) + ' ' + str(np.asarray(engagement).var()))
-			#plt.show()
-			#plt.hold(False)
+			if index == 1: 
+				# index 1
+				e = [x+y for x, y in zip(a_smoothed, t_smoothed)]
+				engagement = [x/y for x, y in zip(b_smoothed, e)]
+			elif index == 2: 
+				# index 2
+				engagement = [x/y for x, y in zip(b_smoothed, t_smoothed)]
+			else: 
+				# Muse built-in concentration
+				engagement = concentration 
+
 			i = i + len(engagement)
 			turn_mean.append(np.asarray(engagement).mean())
 			
@@ -134,21 +141,23 @@ for user in users:
 				ff.write(' ' + str(E))
 				FULL.append(E)
 				EE.append(E)
-			plt.axvline(x=i-1, color = 'k')
-			plt.hold(True)
-			
-		print user + '/' + session + ' mean = ' + str(np.asarray(EE).mean()) + ' var = ' + str(np.asarray(EE).var()) + ' max = ' + str(max(EE)) + ' min = ' + str(min(EE)) 
+			#plt.axvline(x=i-1, color = 'k')
+			#plt.hold(True)		
+
+		#print user + '/' + session + ' mean = ' + str(np.asarray(EE).mean()) + ' var = ' + str(np.asarray(EE).var()) + ' max = ' + str(max(EE)) + ' min = ' + str(min(EE)) 
 		ff.write(' -1\n')
 		ff.close() 	
-		plt.plot(EE)
-		plt.title('relative')
-		plt.savefig('EEG_analysis/engagement/' + user + '/' + session + '/relative.png')
-		plt.hold(False)
-		plt.close()
+		#plt.plot(EE)
+		#plt.title('engagement2')
+		#plt.savefig('EEG_analysis/' + user + '/' + session + '/engagement2.png')
+		#plt.hold(False)
+		#plt.close()
+
 		plt.plot(range(1,26), turn_mean)
 		plt.title('Mean engagement per turn')
 		plt.xlabel('Turns')
-		plt.savefig('EEG_analysis/engagement/' + user + '/' + session + '/engagement.png')
+		plt.xlim([1,25])
+		plt.savefig('EEG_analysis/' + user + '/' + session + '/index_' + str(index) + '.png')
 		plt.hold(False)
 		plt.close()
 		means.append(np.asarray(EE).mean())
