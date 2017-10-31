@@ -24,7 +24,7 @@ def statistics(x):
 	x = np.asarray(x)
 	return min(x), max(x), x.mean()
 
-efile = open('datasets/engagement','r')
+efile = open('datasets/engagement_relative','r')
 lines = efile.readlines()
 efile.close()
 
@@ -68,7 +68,7 @@ for line in lines:
 			x2 = normalize_by_mean(user)
 			x3 = normalize_by_range(x2, -1, 1)
 
-			means.append(xmean)
+			
 			mins.append(xmin)
 			maxs.append(xmax)
 			user = []
@@ -81,7 +81,7 @@ for line in lines:
 	for e in eng: 
 		user.append(float(e))
 		full.append(float(e))
-
+	means.append(np.asarray(eng).astype(float).mean())
 #xnormed, xmax, xmin, xmean = user_statistics(full, 1, 1)
 # signal statistics
 xmin, xmax, xmean = statistics(full) 			
@@ -90,17 +90,36 @@ xmin, xmax, xmean = statistics(full)
 x1 = normalize_by_range(full)
 x2 = normalize_by_mean(full)
 x3 = normalize_by_range(x2, -1, 1)
+x4 = normalize_by_mean_std(full)
+
+print means
+weights = np.ones_like(means)/float(len(means))
+plt.hist(means, weights = weights)
+plt.title('Mean engagement per task turn')
+plt.savefig('mean_engagement_per_turn_all_users.png')
+"""
+plt.hist(x1)
+plt.show()
+plt.hist(x2)
+plt.show()
+plt.hist(x3)
+plt.show()
+plt.hist(x4)
+plt.show()
+"""
 
 # write to files
 f = open('datasets/engagement_means.csv','w')
 f1 = open('datasets/engagement_means_normed_range.csv','w')
 f2 = open('datasets/engagement_means_normed_mean.csv','w')
 f3 = open('datasets/engagement_means_normed_mean_range.csv','w')
+f4 = open('datasets/engagement_scaled.csv','w')
 
-f.write('ID cluster length robot_feedback previous_score current_score current_result action engagement\n')
-f1.write('ID cluster length robot_feedback previous_score current_score current_result action engagement\n')
-f2.write('ID cluster length robot_feedback previous_score current_score current_result action engagement\n')
-f3.write('ID cluster length robot_feedback previous_score current_score current_result action engagement\n')
+f.write('ID cluster length robot_feedback previous_score current_score current_result action engagement_mean engagement_std\n')
+f1.write('ID cluster length robot_feedback previous_score current_score current_result action engagement_mean engagement_std\n')
+f2.write('ID cluster length robot_feedback previous_score current_score current_result action engagement_mean engagement_std\n')
+f3.write('ID cluster length robot_feedback previous_score current_score current_result action engagement_mean engagement_std\n')
+f4.write('ID cluster length robot_feedback previous_score current_score current_result action engagement_mean engagement_std\n')
 
 """ varun
 f.write('user_session_ID clusterID length robot_feedback previous_score current_result mean_engagement action\n')
@@ -111,16 +130,22 @@ f3.write('user_session_ID clusterID length robot_feedback previous_score current
 
 i = 0 
 for u, c, l, r, p, cr, cs, e, a in zip(U, C, L, RF, PS, CR, CS, points, A): 
-	x = np.asarray(full)[i:i+e].mean()
-	s1 = x1[i:i+e].mean()
-	s2 = x2[i:i+e].mean()
-	s3 = x3[i:i+e].mean()
+	m = np.asarray(full)[i:i+e].mean()
+	s = np.asarray(full)[i:i+e].std()
+	m1 = x1[i:i+e].mean()
+	m2 = x2[i:i+e].mean()
+	m3 = x3[i:i+e].mean()
+	m4 = x4[i:i+e].mean()
+	s1 = x1[i:i+e].std()
+	s2 = x2[i:i+e].std()
+	s3 = x3[i:i+e].std()
+	s4 = x4[i:i+e].std()
 	
-	
-	f.write(u + ' ' + str(c) + ' ' + str(l) + ' ' + str(r) + ' ' + str(p) + ' '  + str(cs) + ' ' + str(cr) + ' ' + str(a) + ' ' + str(x) + '\n')
-	f1.write(u + ' ' + str(c) + ' ' + str(l) + ' ' + str(r) + ' ' + str(p) + ' ' + str(cs) + ' ' + str(cr) + ' ' + str(a) + ' ' + str(s1) + '\n')
-	f2.write(u + ' ' + str(c) + ' ' + str(l) + ' ' + str(r) + ' ' + str(p) + ' ' + str(cs) + ' ' + str(cr) + ' ' + str(a) + ' ' + str(s2) + '\n')
-	f3.write(u + ' ' + str(c) + ' ' + str(l) + ' ' + str(r) + ' ' + str(p) + ' ' + str(cs) + ' ' + str(cr) + ' ' + str(a) + ' ' + str(s3) + '\n')
+	f.write(u + ' ' + str(c) + ' ' + str(l) + ' ' + str(r) + ' ' + str(p) + ' '  + str(cs) + ' ' + str(cr) + ' ' + str(a) + ' ' + str(m) + ' ' + str(s) +'\n')
+	f1.write(u + ' ' + str(c) + ' ' + str(l) + ' ' + str(r) + ' ' + str(p) + ' ' + str(cs) + ' ' + str(cr) + ' ' + str(a) + ' ' + str(m1) + ' ' + str(s1) + '\n')
+	f2.write(u + ' ' + str(c) + ' ' + str(l) + ' ' + str(r) + ' ' + str(p) + ' ' + str(cs) + ' ' + str(cr) + ' ' + str(a) + ' ' + str(m2) + ' ' + str(s2) + '\n')
+	f3.write(u + ' ' + str(c) + ' ' + str(l) + ' ' + str(r) + ' ' + str(p) + ' ' + str(cs) + ' ' + str(cr) + ' ' + str(a) + ' ' + str(m3) + ' ' + str(s3) +'\n')
+	f4.write(u + ' ' + str(c) + ' ' + str(l) + ' ' + str(r) + ' ' + str(p) + ' ' + str(cs) + ' ' + str(cr) + ' ' + str(a) + ' ' + str(m4) + ' ' + str(s4) + '\n')
 	
 	""" varun
 	f.write(u + ' ' +  str(c) + ' ' + str(l) + ' ' + str(r) + ' ' + str(p) + ' ' + str(cr) + ' ' + str(x) + ' ' + str(a) + '\n')
