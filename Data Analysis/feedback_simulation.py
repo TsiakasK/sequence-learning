@@ -13,9 +13,10 @@ from sklearn.metrics import mean_squared_error
 from sklearn.svm import NuSVR
 from sklearn.neural_network import MLPRegressor
 import ann
+import pickle
 
 
-CLF = 'asvr'
+CLF = 'sqvr'
 
 data = pd.read_csv('datasets/index_1.csv', delimiter=' ')				
 C = data[['cluster','engagement', 'length','robot_feedback', 'previous_score', 'current_score' , 'current_result', 'action']]
@@ -60,7 +61,7 @@ for ii, cluster in enumerate([a0,a1,a2]):
 			train_Y.append(target)
 
 	if CLF == 'svr': 
-		clf = SVR(kernel='poly', C=50.0)
+		clf = SVR(kernel='poly', C=150.0)
 		clf.fit(train_X, train_Y)
 		svr_prediction = clf.predict(train_X)
 	    	svr_mse = mean_squared_error(train_Y, svr_prediction)
@@ -71,6 +72,7 @@ for ii, cluster in enumerate([a0,a1,a2]):
 		x = np.asarray(train_X)
 		y = np.asarray(train_Y)
 		clf.fit(x, y, epochs=10000, verbose=0)
+		print "loss = " + str(clf.test_on_batch(x, y))
 
 	print ii
 
@@ -91,21 +93,24 @@ for ii, cluster in enumerate([a0,a1,a2]):
 		plt.hold(True)
 		plt.plot(preds, label = labels[i])
 		
-		#first = 1
-		#for a,b in zip(train_X, train_Y): 
-		#	if first: 
-		#		plt.plot(states.index(tuple([a[0], [a[1], a[2], a[3]], a[4]])), b, outcome[i], label = 'real values')	
-		#		first = 0
-		#	else: 
-		#		plt.plot(states.index(tuple([a[0], [a[1], a[2], a[3]], a[4]])), b, outcome[i])	
+		first = 1
+		for a,b in zip(train_X, train_Y): 
+			if first: 
+				plt.plot(states.index(tuple([a[0], [a[1], a[2], a[3]], a[4]])), b, outcome[i], label = 'real values')	
+				first = 0
+			else: 
+				plt.plot(states.index(tuple([a[0], [a[1], a[2], a[3]], a[4]])), b, outcome[i])	
 		#plt.show()
-	
+	plt.xticks([(state_level[0] + state_level[1])/2.0,(state_level[1] + state_level[2])/2.0, (state_level[2] + state_level[3])/2.0, (state_level[3] + len(preds))/2.0], ('Level 1', 'Level 2', 'Level 3', 'Level 4'))
 	height = max(vmax) + 0.1
 	plt.bar(left=state_level, height=[height,height,height,height], width=27, color=['k','w', 'k', 'w'], alpha=0.1)
 	plt.ylim([0, height])
 	plt.xlim([0,len(preds) - 1])
 	plt.legend()
-	plt.savefig('feedback_c' + str(ii) + '.png')
-	plt.close()
-
+	plt.savefig('user_models/feedback_c' + str(ii) + '.png')
+	plt.close()	
+	clf.save('user_models/feedback_' + str(ii) + '.model', 'wb')
+	#ff = open('user_models/feedback_' + str(ii) + '.model', 'wb')
+	#pickle.dump(clf, ff,-1)
+	#ff.close()
 
