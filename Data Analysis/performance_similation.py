@@ -13,6 +13,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.svm import NuSVR
 from sklearn.neural_network import MLPRegressor
 import ann
+import pickle
 
 def softmax(x):
     return np.exp(x) / np.sum(np.exp(x), axis=0)
@@ -81,17 +82,33 @@ for ii, cluster in enumerate([a0,a1,a2]):
 	N = ann.build_pmodel()
 	x = np.asarray(train_X)
 	y = np.asarray(train_Y)
-	N.fit(x, y, epochs=10000, verbose=0)
+	N.fit(x, y, epochs=5000, verbose=0)
+	print "loss = " + str(N.test_on_batch(x, y))
 	
 	print ii	
 
 	preds = []
+	#lev = 0
+	#plevel = []
 	for s in states:
-		#inputs.append([s[0], s[1][0], s[1][1], s[1][2], s[2]])
 		preds.append(N.predict(np.asarray([s[0], s[1][0], s[1][1], s[1][2], s[2]]).reshape(1,5))[0][0])
-	
+		"""
+		if s[0] > lev and plevel: 
+			print np.asarray(plevel).mean()
+			plevel = []
+			lev = s[0]
+		else: 
+			plevel.append(N.predict(np.asarray([s[0], s[1][0], s[1][1], s[1][2], s[2]]).reshape(1,5))[0][0])
+		"""
+
 	#preds = N.predict(np.asarray(inputs))[0][0]
 	plt.bar(left=state_level, height=[1.2,1.2,1.2,1.2], width=27, color=['k','w', 'k', 'w'], alpha=0.1)
+	#plt.text(7, 0.05, 'Level 1',style='italic', fontsize=10)
+	#plt.text(34, 0.05, 'Level 2', style='italic', fontsize=10)
+	#plt.text(61, 0.05, 'Level 3', style='italic', fontsize=10)
+	#plt.text(88, 0.05, 'Level 4', style='italic', fontsize=10)
+	
+	plt.xticks([(state_level[0] + state_level[1])/2.0,(state_level[1] + state_level[2])/2.0, (state_level[2] + state_level[3])/2.0, (state_level[3] + len(preds))/2.0], ('Level 1', 'Level 2', 'Level 3', 'Level 4'))
 	plt.hold(True)
 	plt.plot(preds, label = 'regression values')
 	first = 1
@@ -102,7 +119,10 @@ for ii, cluster in enumerate([a0,a1,a2]):
 		else: 
 			plt.plot(states.index(tuple([a[0], [a[1], a[2], a[3]], a[4]])), b, 'or')	
 	plt.legend()
-	plt.savefig('performance_c' + str(ii) + '.png')
+	plt.savefig('user_models/performance_c' + str(ii) + '.png')
 	plt.close()
-
+	N.save('user_models/performance_' + str(ii) + '.model', 'wb')
+	#f = open('user_models/performance_' + str(ii) + '.model', 'wb')
+	#pickle.dump(N, f)
+	#f.close()
 
