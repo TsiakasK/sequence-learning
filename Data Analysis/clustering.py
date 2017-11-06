@@ -13,20 +13,23 @@ import random
 import itertools
 import pandas as pd
 from sklearn.cluster import DBSCAN
-seed = np.random.RandomState(seed=3)
+seed = np.random.RandomState(seed=150)
 
 markers = ['o', 'v', 'h', 'H', 'o', 'v', 'h', 'H', 'h', 'H', 'o', 'v', 'h']
 colors = ['b', 'r','g','c','y','m', 'b', 'r','g','c','y','m','y','m', 'b']
 combs = list(itertools.product(markers, colors))
-data = pd.read_csv('datasets/all_indices.csv', delimiter=',')
-C = data[['ID','index1','length','current_result']]
+data = pd.read_csv('datasets/index_1.csv', delimiter=',')
+
+C = data[['ID','engagement','length','current_result']]
 users = C['ID'].unique()
 clusters = 3
 
 user_models = []
 perf_models = []
 eng_models = []
+userID = []
 for user in users: 
+	userID.append(user)
 	D = C.loc[C['ID']==user]
 	um = [-1.0,-1.0,-1.0,-1.0, 0.0, 0.0, 0.0, 0.0]
 	perf = [-1.0,-1.0,-1.0,-1.0]
@@ -45,18 +48,20 @@ for user in users:
 			um[i] = wins/float(wins+losses)
 			perf[i] = wins/float(wins+losses)
 		
-		um[i+4] = L['index1'].mean()
-		eng[i] = L['index1'].mean()
+		um[i+4] = L['engagement'].mean()
+		eng[i] = L['engagement'].mean()
 		
 	user_models.append(um)
 	perf_models.append(perf)
 	eng_models.append(eng)	
 
 
-labels = ["performance_engagement", "performance_based", "engagement_based"]
-models = [user_models, perf_models, eng_models]	
-
-for model, label in zip(models, labels): 
+#labels = ["performance_engagement", "performance_based", "engagement_based"]
+#models = [user_models, perf_models, eng_models]
+labels = ["performance_based"]
+models = [perf_models]	
+clusterID = []
+for model, label in zip(models, labels):
 	model -= np.asarray(model).mean()
 	similarities = euclidean_distances(model)
 	mds = manifold.MDS(n_components=2, max_iter=300, eps=1e-6, random_state=seed, dissimilarity="precomputed", n_jobs=2)
@@ -81,10 +86,17 @@ for model, label in zip(models, labels):
 		else: 
 			plt.plot(p[0], p[1], 'o', markersize=9, color = mm[kmeans.labels_[i]])
 
-		#plt.text(p[0], p[1], n[i])
-		#print name[i][0], kmeans.labels_[i]
+		clusterID.append(kmeans.labels_[i])
+
 	plt.legend()
 	plt.title('Clustering using MDS')
 	plt.savefig(label + '_clustering.png')
 	plt.close()
 
+f = open('datasets/user_models_clusters.csv','w')
+f1 = open('datasets/user_models.csv','w')
+f2 = open('datasets/user_clusters.csv','w')
+for a,b, model in zip(userID, clusterID, perf_models): 
+	f.write(str(a) + ' ' + str(b) + ' ' + str(model[0]) + ' ' + str(model[1]) + ' ' + str(model[2]) + ' ' + str(model[3]) + '\n')
+	f1.write(str(a) + ' ' + str(model[0]) + ' ' + str(model[1]) + ' ' + str(model[2]) + ' ' + str(model[3]) + '\n')
+	f2.write(str(a) + ' ' + str(b) + '\n')
